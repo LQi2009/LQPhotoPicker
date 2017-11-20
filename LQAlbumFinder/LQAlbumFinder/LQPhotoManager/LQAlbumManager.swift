@@ -342,6 +342,12 @@ class LQAlbumManager: NSObject {
         })
     }
     
+    func heicToJpg(_ data: Data?) -> Data? {
+        
+        
+        return nil
+    }
+    
     func photoDataSync(from item: LQPhotoItem) -> Data? {
         let options = PHImageRequestOptions()
         options.isSynchronous = true
@@ -350,7 +356,7 @@ class LQAlbumManager: NSObject {
         
         var dt: Data?
         
-        PHCachingImageManager.default().requestImageData(for: item.asset, options: options) { (data, dsc, orientation, info) in
+        PHCachingImageManager.default().requestImageData(for: item.asset, options: options) { (data, uti, orientation, info) in
             
 //            let name = info?["PHImageFileSandboxExtensionTokenKey"] as? String
             dt = data
@@ -442,5 +448,43 @@ extension LQAlbumManager: PHPhotoLibraryChangeObserver {
     
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         
+    }
+}
+
+extension PHAsset {
+    
+    var isHEIC: Bool {
+        
+        let rs = PHAssetResource.assetResources(for: self)
+        if let resource = rs.first {
+            let uti = resource.uniformTypeIdentifier
+            if uti == "public.heif" || uti == "public.heic" {
+                return true
+            }
+        }
+        
+        return false
+    }
+}
+
+extension Data {
+    
+    func toJPGData() -> Data? {
+        
+        let ciImage = CIImage(data: self)
+        
+        if let image = ciImage {
+            let context = CIContext()
+            
+            if #available(iOS 10.0, *) {
+                let jpgData = context.jpegRepresentation(of: image, colorSpace: image.colorSpace!, options: [:])
+                
+                return jpgData
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+        
+        return self
     }
 }

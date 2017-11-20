@@ -75,8 +75,6 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
         self.navigationController?.navigationBar.barStyle = .blackTranslucent
        collectionView.register(LQPhotoPreviewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
-        
-        
         self.layoutTopBar()
         self.layoutBottomView()
         
@@ -140,7 +138,6 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
             self?.topBarHidden()
         }
         
-//        cell.isUserInteractionEnabled = false
         return cell
     }
     ///
@@ -240,12 +237,11 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
         }
     }
     
-        
-        let collection = scrollView as! UICollectionView
-        currentIndexPath = IndexPath(item: 0, section: currentIndex)
-        collection.scrollToItem(at: currentIndexPath, at: .centeredHorizontally, animated: true)
-        
-        setSelectedButtonState(currentIndexPath)
+    let collection = scrollView as! UICollectionView
+    currentIndexPath = IndexPath(item: 0, section: currentIndex)
+    collection.scrollToItem(at: currentIndexPath, at: .centeredHorizontally, animated: true)
+    
+    setSelectedButtonState(currentIndexPath)
     
     if isBeginDrag {
         isBeginDrag = false
@@ -442,9 +438,9 @@ extension LQPhotoPreviewController {
 //        bottomView.addSubview(editButton)
         
         let originBtn = UIButton(type: .custom)
-        originBtn.bounds = CGRect(x: 0, y: 7, width: 80, height: 35)
-        
-        originBtn.center = CGPoint(x: bottomView.frame.width/2.0, y: bottomView.frame.height/2.0)
+        originBtn.bounds = CGRect(x: 0, y: 7, width: 80, height: 30)
+//        bottomView.frame.width/2.0
+        originBtn.center = CGPoint(x: 50, y: bottomView.frame.height/2.0)
         originBtn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         originBtn.setTitle("原图", for: .normal)
         originBtn.setImage(UIImage.init(named: "unSelectedBG"), for: .normal)

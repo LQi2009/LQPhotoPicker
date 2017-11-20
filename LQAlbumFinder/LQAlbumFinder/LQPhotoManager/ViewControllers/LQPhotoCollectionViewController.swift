@@ -70,7 +70,7 @@ class LQPhotoCollectionViewController: UICollectionViewController {
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.bounces = true
         self.title = "相册"
-        
+        LQLog("begin")
         if self.albumItem == nil {
             
             LQAlbumManager.authotization { (isAuth) in
@@ -85,11 +85,13 @@ class LQPhotoCollectionViewController: UICollectionViewController {
             }
         } else {
 //            self.title = self.albumItem?.name
+            
             DispatchQueue(label: "LQPhotoCollectionViewControllerQueue").async {
+                
                 self.loadData()
             }
         }
-        
+        LQLog("end")
         self.setupNavBar()
         layoutBottomView()
         
@@ -97,6 +99,7 @@ class LQPhotoCollectionViewController: UICollectionViewController {
     }
     
     private func loadData() {
+        LQLog("start")
         if dataSource.count >= 0 {
             dataSource.removeAll()
         }
@@ -499,7 +502,7 @@ extension LQPhotoCollectionViewController {
         bottomView.addSubview(previewButton)
         
         let originBtn = UIButton(type: .custom)
-        originBtn.bounds = CGRect(x: 0, y: 0, width: 100, height: 49)
+        originBtn.bounds = CGRect(x: 0, y: 0, width: 100, height: 30)
         
         originBtn.center = CGPoint(x: bottomView.frame.width/2.0, y: bottomView.frame.height/2.0)
         originBtn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
@@ -635,4 +638,25 @@ extension LQPhotoCollectionViewController:PHPhotoLibraryChangeObserver, UIImageP
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         
     }
+}
+
+
+
+public func LQLog<T>(_ message: T, file: String = #file, method: String = #function,line: Int = #line) {
+    #if DEBUG
+        let date = "\(Date().timeIntervalSince1970)"
+        
+        let msg = """
+        *********************************************************
+        class: \((file as NSString).lastPathComponent)
+        method: \(method)
+        line: \(line)
+        date: \(date)
+        message: \(message)
+        *********************************************************
+        """
+        print(msg)
+//        print("\((file as NSString).lastPathComponent)[\(line)][\(method)][\(date)], : \(message)")
+    #else
+    #endif
 }
