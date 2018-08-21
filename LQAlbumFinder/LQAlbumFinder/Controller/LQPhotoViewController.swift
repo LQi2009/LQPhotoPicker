@@ -611,9 +611,9 @@ extension LQPhotoViewController {
     }
 }
 
-extension LQPhotoViewController:PHPhotoLibraryChangeObserver, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension LQPhotoViewController: PHPhotoLibraryChangeObserver, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    func cameraAction() {
+    private func cameraAction() {
         
         let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         if status == .denied || status == .restricted {
@@ -668,7 +668,7 @@ extension LQPhotoViewController:PHPhotoLibraryChangeObserver, UIImagePickerContr
         }
     }
     
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error, contextInfo: Any) {
+    @objc public func image(_ image: UIImage, didFinishSavingWithError error: Error, contextInfo: Any) {
         
         print("save success")
     }

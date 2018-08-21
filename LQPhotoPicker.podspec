@@ -67,18 +67,11 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/LQi2009/LQPhotoPicker.git", :tag => "#{s.version}" }
   #
 
-  s.source_files  = "LQAlbumFinder", "LQAlbumFinder/LQAlbumFinder/**/*.{swift}"
+  s.source_files  = "LQAlbumFinder/LQAlbumFinder/**/*.{swift}"
   # s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
 
-
-  # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  A list of resources included with the Pod. These are copied into the
-  #  target bundle with a build phase script. Anything else will be cleaned.
-  #  You can preserve files from being cleaned, please don't preserve
-  #  non-essential files like tests, examples and documentation.
   #
 
   # s.resource  = "icon.png"
