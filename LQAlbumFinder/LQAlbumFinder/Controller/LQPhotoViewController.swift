@@ -9,33 +9,35 @@
 import UIKit
 import Photos
 
-enum LQPhotoCollectionStyle {
+public enum LQPhotoCollectionStyle {
     case regular, photos, videos
 }
 
 private let reuseIdentifier = "LQPhotoCollectionViewControllerReuseIdentifier"
-typealias LQPhotoSelectedHandler = (_ items: [LQPhotoItem]) -> Void
+public typealias LQPhotoSelectedHandler = (_ items: [LQPhotoItem]) -> Void
 
 extension LQPhotoViewController {
     
-    func didSelectedItems(_ handle: @escaping LQPhotoSelectedHandler) {
+    public func didSelectedItems(_ handle: @escaping LQPhotoSelectedHandler) {
         selectedHandle = handle
     }
 }
 
-class LQPhotoViewController: UICollectionViewController {
+public class LQPhotoViewController: UICollectionViewController {
 
-    var camaraEnable: Bool = false
-    
-    var albumItem: LQAlbumItem?
-    var photoAlbum: LQAlbumItem?// 相机胶卷
-    
-    var photoSavedAlbum: LQAlbumItem?// 保存拍摄照片的相册
-    var dataSource: [LQPhotoItem] = []
     var maxSelectedNumber: Int = 0
     var style: LQPhotoCollectionStyle = .regular
+    var camaraEnable: Bool = false
+    var albumItem: LQAlbumItem?
+    var columnNumber: Int = 4
     
-    lazy var activity: UIActivityIndicatorView = {
+    private var photoAlbum: LQAlbumItem?// 相机胶卷
+    
+    private var photoSavedAlbum: LQAlbumItem?// 保存拍摄照片的相册
+    private var dataSource: [LQPhotoItem] = []
+    
+    
+    private lazy var activity: UIActivityIndicatorView = {
         
         let acti = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         acti.hidesWhenStopped = true
@@ -44,7 +46,7 @@ class LQPhotoViewController: UICollectionViewController {
         return acti;
     }()
     
-    lazy var bottomBar: LQPhotoBottomBar = {
+    private lazy var bottomBar: LQPhotoBottomBar = {
 
         let bar = LQPhotoBottomBar()
         self.view.addSubview(bar)
@@ -57,7 +59,7 @@ class LQPhotoViewController: UICollectionViewController {
         return PHCachingImageManager()
     }()
     
-    var selectedHandle: LQPhotoSelectedHandler?
+    private var selectedHandle: LQPhotoSelectedHandler?
     fileprivate var previousPreheatRect = CGRect.zero
     
     deinit {
@@ -66,7 +68,7 @@ class LQPhotoViewController: UICollectionViewController {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
     
-    override func viewDidLayoutSubviews() {
+    override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         var colFrame = collectionView?.frame
@@ -76,7 +78,7 @@ class LQPhotoViewController: UICollectionViewController {
         bottomBar.frame = CGRect(x: 0, y: self.view.frame.height - 49, width: self.view.frame.width, height: 49)
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.barStyle = .black
@@ -210,15 +212,20 @@ class LQPhotoViewController: UICollectionViewController {
     convenience init() {
         
         let space: CGFloat = 4
+        var col = 4
+        
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: (UIScreen.main.bounds.width - space * 5)/4.0, height: (UIScreen.main.bounds.width - space * 5)/4.0)
+        if LQAlbum_iPad {
+            col = 10
+        }
+        layout.itemSize = CGSize(width: (UIScreen.main.bounds.width - space * CGFloat(col + 1))/CGFloat(col), height: (UIScreen.main.bounds.width - space * CGFloat(col + 1))/CGFloat(col))
         layout.minimumLineSpacing = space
         layout.minimumInteritemSpacing = space
         layout.sectionInset = UIEdgeInsetsMake(space, space, space, space)
         self.init(collectionViewLayout: layout)
     }
     
-    override func didReceiveMemoryWarning() {
+    override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -266,11 +273,11 @@ class LQPhotoViewController: UICollectionViewController {
     }
 
     // MARK: UICollectionViewDataSource
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+    override public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if self.camaraEnable {
             return dataSource.count + 1
@@ -279,7 +286,7 @@ class LQPhotoViewController: UICollectionViewController {
         return dataSource.count
     }
 
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.row == dataSource.count {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LQPhotoCameraCellID", for: indexPath)
@@ -302,7 +309,7 @@ class LQPhotoViewController: UICollectionViewController {
 
     // MARK: UICollectionViewDelegate
 
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         guard indexPath.row < dataSource.count else {
             self.cameraAction()
@@ -431,12 +438,12 @@ class LQPhotoViewController: UICollectionViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    override var shouldAutorotate: Bool {
+    override public var shouldAutorotate: Bool {
         
         return false
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
 
@@ -444,7 +451,7 @@ class LQPhotoViewController: UICollectionViewController {
 
 extension LQPhotoViewController {
     
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    override public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         updateCachedAssets()
     }
     
@@ -630,11 +637,11 @@ extension LQPhotoViewController:PHPhotoLibraryChangeObserver, UIImagePickerContr
         }
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    private func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    private func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true, completion: nil)
         guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
             
@@ -666,7 +673,7 @@ extension LQPhotoViewController:PHPhotoLibraryChangeObserver, UIImagePickerContr
         print("save success")
     }
     
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
+    public func photoLibraryDidChange(_ changeInstance: PHChange) {
         
         print("photoLibraryDidChange")
         

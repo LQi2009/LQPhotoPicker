@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class LQAlbumItem {
+public class LQAlbumItem {
 
     var name: String = "未知"
     var count: Int = 0
@@ -66,7 +66,7 @@ class LQAlbumItem {
     }
 }
 
-class LQPhotoItem: NSObject {
+public class LQPhotoItem: NSObject {
     
     var isSelected: Bool = false {
         didSet{
