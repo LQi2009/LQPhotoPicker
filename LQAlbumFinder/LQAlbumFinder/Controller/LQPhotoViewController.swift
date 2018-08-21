@@ -23,7 +23,7 @@ extension LQPhotoViewController {
     }
 }
 
-public class LQPhotoViewController: UICollectionViewController {
+public class LQPhotoViewController: UICollectionViewController, UIImagePickerControllerDelegate {
 
     var maxSelectedNumber: Int = 0
     var style: LQPhotoCollectionStyle = .regular
@@ -641,7 +641,7 @@ extension LQPhotoViewController: PHPhotoLibraryChangeObserver {
     }
 }
 
-extension LQPhotoViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension LQPhotoViewController: UINavigationControllerDelegate {
     
     public func cameraAction() {
         
