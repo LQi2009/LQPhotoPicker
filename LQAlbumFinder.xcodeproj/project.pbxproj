@@ -107,8 +107,6 @@
 		D2007CD0212BC6FF0048DB36 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				D204E9952129593700DCE206 /* LQPhotoPicker.swift */,
-				D204E99821295A8D00DCE206 /* LQPhotoBrowser.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -163,6 +161,8 @@
 				D2B24C1A21270D41006442BB /* LQAlbumFinder */,
 				D2B24BEC21270CF0006442BB /* AppDelegate.swift */,
 				D2B24BEE21270CF0006442BB /* ViewController.swift */,
+				D204E9952129593700DCE206 /* LQPhotoPicker.swift */,
+				D204E99821295A8D00DCE206 /* LQPhotoBrowser.swift */,
 				D2B24BF021270CF0006442BB /* Main.storyboard */,
 				D2B24BF321270CF2006442BB /* Assets.xcassets */,
 				D2B24BF521270CF2006442BB /* LaunchScreen.storyboard */,
