@@ -610,10 +610,40 @@ extension LQPhotoViewController {
         }
     }
 }
-
-extension LQPhotoViewController: PHPhotoLibraryChangeObserver, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension LQPhotoViewController: PHPhotoLibraryChangeObserver {
     
-    private func cameraAction() {
+    public func photoLibraryDidChange(_ changeInstance: PHChange) {
+        
+        print("photoLibraryDidChange")
+        
+        if let changes = changeInstance.changeDetails(for: (self.photoSavedAlbum?.assetCollection)!) {
+            
+            if let album = changes.objectAfterChanges {
+                
+                let item = LQAlbumItem(album)
+                let items = LQAlbumManager.shared.fetchAssetsFrom(item)
+                
+                if let last = items.last, let sLast = self.dataSource.last {
+                    
+                    if last.asset.localIdentifier != sLast.asset.localIdentifier {
+                        self.dataSource.append(items.last!)
+                        
+                        DispatchQueue.main.async {
+                            self.collectionView?.reloadData()
+                        }
+                    }
+                }
+                
+                
+            }
+        }
+        
+    }
+}
+
+extension LQPhotoViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    public func cameraAction() {
         
         let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
         if status == .denied || status == .restricted {
@@ -668,37 +698,9 @@ extension LQPhotoViewController: PHPhotoLibraryChangeObserver, UIImagePickerCont
         }
     }
     
-    @objc public func image(_ image: UIImage, didFinishSavingWithError error: Error, contextInfo: Any) {
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error, contextInfo: Any) {
         
         print("save success")
-    }
-    
-    public func photoLibraryDidChange(_ changeInstance: PHChange) {
-        
-        print("photoLibraryDidChange")
-        
-        if let changes = changeInstance.changeDetails(for: (self.photoSavedAlbum?.assetCollection)!) {
-            
-            if let album = changes.objectAfterChanges {
-                
-                let item = LQAlbumItem(album)
-                let items = LQAlbumManager.shared.fetchAssetsFrom(item)
-                
-                if let last = items.last, let sLast = self.dataSource.last {
-                    
-                    if last.asset.localIdentifier != sLast.asset.localIdentifier {
-                        self.dataSource.append(items.last!)
-                        
-                        DispatchQueue.main.async {
-                            self.collectionView?.reloadData()
-                        }
-                    }
-                }
-                
-                
-            }
-        }
-
     }
 }
 
