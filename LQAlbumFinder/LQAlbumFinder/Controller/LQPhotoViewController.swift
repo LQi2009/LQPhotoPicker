@@ -23,7 +23,7 @@ extension LQPhotoViewController {
     }
 }
 
-public class LQPhotoViewController: UICollectionViewController, UIImagePickerControllerDelegate {
+public class LQPhotoViewController: UICollectionViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var maxSelectedNumber: Int = 0
     var style: LQPhotoCollectionStyle = .regular
@@ -446,6 +446,67 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
+    
+    
+    public func cameraAction() {
+        
+        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        if status == .denied || status == .restricted {
+            self.noneAuthodAlert("无权访问您的相机")
+        } else {
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                
+                let picker = UIImagePickerController()
+                picker.delegate = self
+                picker.allowsEditing = true
+                picker.sourceType = UIImagePickerControllerSourceType.camera
+                picker.cameraCaptureMode = .photo
+                picker.modalPresentationStyle = .fullScreen
+                
+                //                picker.showsCameraControls = false
+                //                picker.cameraViewTransform = CGAffineTransform.init(scaleX: 1.5, y: 2.0)
+                present(picker,animated: true,completion: nil)
+            } else {
+                print("不支持相机")
+            }
+        }
+    }
+    
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+            
+            return
+        }
+        
+        let appInfo = Bundle.main.infoDictionary
+        if let appName = appInfo?["CFBundleDisplayName"] as? String {
+            if let album = LQAlbumManager.shared.fetchAlbum(appName) {
+                self.photoSavedAlbum = album
+                LQAlbumManager.shared.savePhoto(image, to: album.assetCollection)
+            } else {
+                LQAlbumManager.shared.newAlbum(appName, resultHandle: { (success, error) in
+                    if success {
+                        if let album = LQAlbumManager.shared.fetchAlbum(appName) {
+                            self.photoSavedAlbum = album
+                            LQAlbumManager.shared.savePhoto(image, to: album.assetCollection)
+                        }
+                    }
+                })
+            }
+        } else {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error, contextInfo: Any) {
+        
+        print("save success")
+    }
 
 }
 
@@ -641,68 +702,10 @@ extension LQPhotoViewController: PHPhotoLibraryChangeObserver {
     }
 }
 
-extension LQPhotoViewController: UINavigationControllerDelegate {
-    
-    public func cameraAction() {
-        
-        let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
-        if status == .denied || status == .restricted {
-            self.noneAuthodAlert("无权访问您的相机")
-        } else {
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                
-                let picker = UIImagePickerController()
-                picker.delegate = self
-                picker.allowsEditing = true
-                picker.sourceType = UIImagePickerControllerSourceType.camera
-                picker.cameraCaptureMode = .photo
-                picker.modalPresentationStyle = .fullScreen
-                
-                //                picker.showsCameraControls = false
-                //                picker.cameraViewTransform = CGAffineTransform.init(scaleX: 1.5, y: 2.0)
-                present(picker,animated: true,completion: nil)
-            } else {
-                print("不支持相机")
-            }
-        }
-    }
-    
-    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
-            
-            return
-        }
-        
-        let appInfo = Bundle.main.infoDictionary
-        if let appName = appInfo?["CFBundleDisplayName"] as? String {
-            if let album = LQAlbumManager.shared.fetchAlbum(appName) {
-                self.photoSavedAlbum = album
-                LQAlbumManager.shared.savePhoto(image, to: album.assetCollection)
-            } else {
-                LQAlbumManager.shared.newAlbum(appName, resultHandle: { (success, error) in
-                    if success {
-                        if let album = LQAlbumManager.shared.fetchAlbum(appName) {
-                            self.photoSavedAlbum = album
-                            LQAlbumManager.shared.savePhoto(image, to: album.assetCollection)
-                        }
-                    }
-                })
-            }
-        } else {
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(_:didFinishSavingWithError:contextInfo:)), nil)
-        }
-    }
-    
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error, contextInfo: Any) {
-        
-        print("save success")
-    }
-}
+//extension LQPhotoViewController {
+//
+//
+//}
 
 private var currentPath: IndexPath?
 extension LQPhotoViewController {
