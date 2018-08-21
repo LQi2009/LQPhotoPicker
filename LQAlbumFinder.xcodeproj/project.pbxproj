@@ -1,0 +1,689 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D204E98721294ECB00DCE206 /* LQAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E98621294ECB00DCE206 /* LQAlbumCell.swift */; };
+		D204E98921294FCF00DCE206 /* LQPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E98821294FCF00DCE206 /* LQPhotoCell.swift */; };
+		D204E98B212950DE00DCE206 /* LQPhotoPreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E98A212950DE00DCE206 /* LQPhotoPreviewCell.swift */; };
+		D204E98E2129527300DCE206 /* LQAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E98D2129527300DCE206 /* LQAlbumViewController.swift */; };
+		D204E990212953A200DCE206 /* LQPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E98F212953A200DCE206 /* LQPhotoViewController.swift */; };
+		D204E9922129566E00DCE206 /* LQPhotoCameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E9912129566E00DCE206 /* LQPhotoCameraCell.swift */; };
+		D204E9942129570B00DCE206 /* LQPhotoPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E9932129570B00DCE206 /* LQPhotoPreviewController.swift */; };
+		D204E9962129593700DCE206 /* LQPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E9952129593700DCE206 /* LQPhotoPicker.swift */; };
+		D204E99921295A8D00DCE206 /* LQPhotoBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E99821295A8D00DCE206 /* LQPhotoBrowser.swift */; };
+		D204E9B5212977AD00DCE206 /* LQPhotoBottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D204E9B4212977AD00DCE206 /* LQPhotoBottomBar.swift */; };
+		D2217DE321270E7F00D5C734 /* LQAlbumItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2217DE221270E7F00D5C734 /* LQAlbumItem.swift */; };
+		D2217DE521270F1A00D5C734 /* LQAlbumConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2217DE421270F1A00D5C734 /* LQAlbumConfig.swift */; };
+		D2B24BED21270CF0006442BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B24BEC21270CF0006442BB /* AppDelegate.swift */; };
+		D2B24BEF21270CF0006442BB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B24BEE21270CF0006442BB /* ViewController.swift */; };
+		D2B24BF221270CF0006442BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2B24BF021270CF0006442BB /* Main.storyboard */; };
+		D2B24BF421270CF2006442BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2B24BF321270CF2006442BB /* Assets.xcassets */; };
+		D2B24BF721270CF2006442BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2B24BF521270CF2006442BB /* LaunchScreen.storyboard */; };
+		D2B24C0221270CF2006442BB /* LQAlbumFinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B24C0121270CF2006442BB /* LQAlbumFinderTests.swift */; };
+		D2B24C0D21270CF2006442BB /* LQAlbumFinderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B24C0C21270CF2006442BB /* LQAlbumFinderUITests.swift */; };
+		D2B24C1C21270D76006442BB /* LQAlbumManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B24C1B21270D76006442BB /* LQAlbumManager.swift */; };
+		D2C4E7C0212AD57C002D93DB /* LQAlbumSources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D2C4E7BF212AD57C002D93DB /* LQAlbumSources.bundle */; };
+		D2C4E7C2212BF3E7002D93DB /* LQPhotoTopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C4E7C1212BF3E7002D93DB /* LQPhotoTopBar.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D2B24BFE21270CF2006442BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B24BE121270CF0006442BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2B24BE821270CF0006442BB;
+			remoteInfo = LQAlbumFinder;
+		};
+		D2B24C0921270CF2006442BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B24BE121270CF0006442BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2B24BE821270CF0006442BB;
+			remoteInfo = LQAlbumFinder;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D204E98621294ECB00DCE206 /* LQAlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQAlbumCell.swift; sourceTree = "<group>"; };
+		D204E98821294FCF00DCE206 /* LQPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoCell.swift; sourceTree = "<group>"; };
+		D204E98A212950DE00DCE206 /* LQPhotoPreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoPreviewCell.swift; sourceTree = "<group>"; };
+		D204E98D2129527300DCE206 /* LQAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQAlbumViewController.swift; sourceTree = "<group>"; };
+		D204E98F212953A200DCE206 /* LQPhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoViewController.swift; sourceTree = "<group>"; };
+		D204E9912129566E00DCE206 /* LQPhotoCameraCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoCameraCell.swift; sourceTree = "<group>"; };
+		D204E9932129570B00DCE206 /* LQPhotoPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoPreviewController.swift; sourceTree = "<group>"; };
+		D204E9952129593700DCE206 /* LQPhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoPicker.swift; sourceTree = "<group>"; };
+		D204E99821295A8D00DCE206 /* LQPhotoBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoBrowser.swift; sourceTree = "<group>"; };
+		D204E9B4212977AD00DCE206 /* LQPhotoBottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoBottomBar.swift; sourceTree = "<group>"; };
+		D2217DE221270E7F00D5C734 /* LQAlbumItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQAlbumItem.swift; sourceTree = "<group>"; };
+		D2217DE421270F1A00D5C734 /* LQAlbumConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQAlbumConfig.swift; sourceTree = "<group>"; };
+		D2B24BE921270CF0006442BB /* LQAlbumFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LQAlbumFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2B24BEC21270CF0006442BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D2B24BEE21270CF0006442BB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D2B24BF121270CF0006442BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D2B24BF321270CF2006442BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D2B24BF621270CF2006442BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D2B24BF821270CF2006442BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2B24BFD21270CF2006442BB /* LQAlbumFinderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LQAlbumFinderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2B24C0121270CF2006442BB /* LQAlbumFinderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQAlbumFinderTests.swift; sourceTree = "<group>"; };
+		D2B24C0321270CF2006442BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2B24C0821270CF2006442BB /* LQAlbumFinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LQAlbumFinderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2B24C0C21270CF2006442BB /* LQAlbumFinderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQAlbumFinderUITests.swift; sourceTree = "<group>"; };
+		D2B24C0E21270CF2006442BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D2B24C1B21270D76006442BB /* LQAlbumManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQAlbumManager.swift; sourceTree = "<group>"; };
+		D2C4E7BF212AD57C002D93DB /* LQAlbumSources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LQAlbumSources.bundle; sourceTree = "<group>"; };
+		D2C4E7C1212BF3E7002D93DB /* LQPhotoTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LQPhotoTopBar.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2B24BE621270CF0006442BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B24BFA21270CF2006442BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B24C0521270CF2006442BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D2007CD0212BC6FF0048DB36 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				D204E9952129593700DCE206 /* LQPhotoPicker.swift */,
+				D204E99821295A8D00DCE206 /* LQPhotoBrowser.swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		D204E98C212951FE00DCE206 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				D204E98D2129527300DCE206 /* LQAlbumViewController.swift */,
+				D204E98F212953A200DCE206 /* LQPhotoViewController.swift */,
+				D204E9932129570B00DCE206 /* LQPhotoPreviewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		D2217DE621294DB300D5C734 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D204E98621294ECB00DCE206 /* LQAlbumCell.swift */,
+				D204E98821294FCF00DCE206 /* LQPhotoCell.swift */,
+				D204E98A212950DE00DCE206 /* LQPhotoPreviewCell.swift */,
+				D204E9912129566E00DCE206 /* LQPhotoCameraCell.swift */,
+				D204E9B4212977AD00DCE206 /* LQPhotoBottomBar.swift */,
+				D2C4E7C1212BF3E7002D93DB /* LQPhotoTopBar.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D2B24BE021270CF0006442BB = {
+			isa = PBXGroup;
+			children = (
+				D2B24BEB21270CF0006442BB /* LQAlbumFinder */,
+				D2B24C0021270CF2006442BB /* LQAlbumFinderTests */,
+				D2B24C0B21270CF2006442BB /* LQAlbumFinderUITests */,
+				D2B24BEA21270CF0006442BB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D2B24BEA21270CF0006442BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2B24BE921270CF0006442BB /* LQAlbumFinder.app */,
+				D2B24BFD21270CF2006442BB /* LQAlbumFinderTests.xctest */,
+				D2B24C0821270CF2006442BB /* LQAlbumFinderUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D2B24BEB21270CF0006442BB /* LQAlbumFinder */ = {
+			isa = PBXGroup;
+			children = (
+				D2007CD0212BC6FF0048DB36 /* Demo */,
+				D2B24C1A21270D41006442BB /* LQAlbumFinder */,
+				D2B24BEC21270CF0006442BB /* AppDelegate.swift */,
+				D2B24BEE21270CF0006442BB /* ViewController.swift */,
+				D2B24BF021270CF0006442BB /* Main.storyboard */,
+				D2B24BF321270CF2006442BB /* Assets.xcassets */,
+				D2B24BF521270CF2006442BB /* LaunchScreen.storyboard */,
+				D2B24BF821270CF2006442BB /* Info.plist */,
+			);
+			path = LQAlbumFinder;
+			sourceTree = "<group>";
+		};
+		D2B24C0021270CF2006442BB /* LQAlbumFinderTests */ = {
+			isa = PBXGroup;
+			children = (
+				D2B24C0121270CF2006442BB /* LQAlbumFinderTests.swift */,
+				D2B24C0321270CF2006442BB /* Info.plist */,
+			);
+			path = LQAlbumFinderTests;
+			sourceTree = "<group>";
+		};
+		D2B24C0B21270CF2006442BB /* LQAlbumFinderUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D2B24C0C21270CF2006442BB /* LQAlbumFinderUITests.swift */,
+				D2B24C0E21270CF2006442BB /* Info.plist */,
+			);
+			path = LQAlbumFinderUITests;
+			sourceTree = "<group>";
+		};
+		D2B24C1A21270D41006442BB /* LQAlbumFinder */ = {
+			isa = PBXGroup;
+			children = (
+				D2C4E7BF212AD57C002D93DB /* LQAlbumSources.bundle */,
+				D204E98C212951FE00DCE206 /* Controller */,
+				D2217DE621294DB300D5C734 /* Views */,
+				D2B24C1D21270E15006442BB /* Model */,
+				D2B24C1B21270D76006442BB /* LQAlbumManager.swift */,
+				D2217DE421270F1A00D5C734 /* LQAlbumConfig.swift */,
+			);
+			path = LQAlbumFinder;
+			sourceTree = "<group>";
+		};
+		D2B24C1D21270E15006442BB /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D2217DE221270E7F00D5C734 /* LQAlbumItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D2B24BE821270CF0006442BB /* LQAlbumFinder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2B24C1121270CF2006442BB /* Build configuration list for PBXNativeTarget "LQAlbumFinder" */;
+			buildPhases = (
+				D2B24BE521270CF0006442BB /* Sources */,
+				D2B24BE621270CF0006442BB /* Frameworks */,
+				D2B24BE721270CF0006442BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LQAlbumFinder;
+			productName = LQAlbumFinder;
+			productReference = D2B24BE921270CF0006442BB /* LQAlbumFinder.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D2B24BFC21270CF2006442BB /* LQAlbumFinderTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2B24C1421270CF2006442BB /* Build configuration list for PBXNativeTarget "LQAlbumFinderTests" */;
+			buildPhases = (
+				D2B24BF921270CF2006442BB /* Sources */,
+				D2B24BFA21270CF2006442BB /* Frameworks */,
+				D2B24BFB21270CF2006442BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D2B24BFF21270CF2006442BB /* PBXTargetDependency */,
+			);
+			name = LQAlbumFinderTests;
+			productName = LQAlbumFinderTests;
+			productReference = D2B24BFD21270CF2006442BB /* LQAlbumFinderTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D2B24C0721270CF2006442BB /* LQAlbumFinderUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2B24C1721270CF2006442BB /* Build configuration list for PBXNativeTarget "LQAlbumFinderUITests" */;
+			buildPhases = (
+				D2B24C0421270CF2006442BB /* Sources */,
+				D2B24C0521270CF2006442BB /* Frameworks */,
+				D2B24C0621270CF2006442BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D2B24C0A21270CF2006442BB /* PBXTargetDependency */,
+			);
+			name = LQAlbumFinderUITests;
+			productName = LQAlbumFinderUITests;
+			productReference = D2B24C0821270CF2006442BB /* LQAlbumFinderUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D2B24BE121270CF0006442BB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = LiuQiqiang;
+				TargetAttributes = {
+					D2B24BE821270CF0006442BB = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+					D2B24BFC21270CF2006442BB = {
+						CreatedOnToolsVersion = 9.4.1;
+						TestTargetID = D2B24BE821270CF0006442BB;
+					};
+					D2B24C0721270CF2006442BB = {
+						CreatedOnToolsVersion = 9.4.1;
+						TestTargetID = D2B24BE821270CF0006442BB;
+					};
+				};
+			};
+			buildConfigurationList = D2B24BE421270CF0006442BB /* Build configuration list for PBXProject "LQAlbumFinder" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D2B24BE021270CF0006442BB;
+			productRefGroup = D2B24BEA21270CF0006442BB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2B24BE821270CF0006442BB /* LQAlbumFinder */,
+				D2B24BFC21270CF2006442BB /* LQAlbumFinderTests */,
+				D2B24C0721270CF2006442BB /* LQAlbumFinderUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D2B24BE721270CF0006442BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2C4E7C0212AD57C002D93DB /* LQAlbumSources.bundle in Resources */,
+				D2B24BF721270CF2006442BB /* LaunchScreen.storyboard in Resources */,
+				D2B24BF421270CF2006442BB /* Assets.xcassets in Resources */,
+				D2B24BF221270CF0006442BB /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B24BFB21270CF2006442BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B24C0621270CF2006442BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2B24BE521270CF0006442BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D204E98921294FCF00DCE206 /* LQPhotoCell.swift in Sources */,
+				D204E9B5212977AD00DCE206 /* LQPhotoBottomBar.swift in Sources */,
+				D204E98E2129527300DCE206 /* LQAlbumViewController.swift in Sources */,
+				D204E98721294ECB00DCE206 /* LQAlbumCell.swift in Sources */,
+				D2B24BEF21270CF0006442BB /* ViewController.swift in Sources */,
+				D204E9922129566E00DCE206 /* LQPhotoCameraCell.swift in Sources */,
+				D204E990212953A200DCE206 /* LQPhotoViewController.swift in Sources */,
+				D2217DE521270F1A00D5C734 /* LQAlbumConfig.swift in Sources */,
+				D204E9962129593700DCE206 /* LQPhotoPicker.swift in Sources */,
+				D204E98B212950DE00DCE206 /* LQPhotoPreviewCell.swift in Sources */,
+				D2217DE321270E7F00D5C734 /* LQAlbumItem.swift in Sources */,
+				D2B24BED21270CF0006442BB /* AppDelegate.swift in Sources */,
+				D204E9942129570B00DCE206 /* LQPhotoPreviewController.swift in Sources */,
+				D2C4E7C2212BF3E7002D93DB /* LQPhotoTopBar.swift in Sources */,
+				D204E99921295A8D00DCE206 /* LQPhotoBrowser.swift in Sources */,
+				D2B24C1C21270D76006442BB /* LQAlbumManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B24BF921270CF2006442BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2B24C0221270CF2006442BB /* LQAlbumFinderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2B24C0421270CF2006442BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2B24C0D21270CF2006442BB /* LQAlbumFinderUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D2B24BFF21270CF2006442BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2B24BE821270CF0006442BB /* LQAlbumFinder */;
+			targetProxy = D2B24BFE21270CF2006442BB /* PBXContainerItemProxy */;
+		};
+		D2B24C0A21270CF2006442BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2B24BE821270CF0006442BB /* LQAlbumFinder */;
+			targetProxy = D2B24C0921270CF2006442BB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D2B24BF021270CF0006442BB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2B24BF121270CF0006442BB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D2B24BF521270CF2006442BB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2B24BF621270CF2006442BB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D2B24C0F21270CF2006442BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D2B24C1021270CF2006442BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D2B24C1221270CF2006442BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M5AQP3WXJE;
+				INFOPLIST_FILE = LQAlbumFinder/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D2B24C1321270CF2006442BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M5AQP3WXJE;
+				INFOPLIST_FILE = LQAlbumFinder/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinder;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D2B24C1521270CF2006442BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M5AQP3WXJE;
+				INFOPLIST_FILE = LQAlbumFinderTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LQAlbumFinder.app/LQAlbumFinder";
+			};
+			name = Debug;
+		};
+		D2B24C1621270CF2006442BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M5AQP3WXJE;
+				INFOPLIST_FILE = LQAlbumFinderTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LQAlbumFinder.app/LQAlbumFinder";
+			};
+			name = Release;
+		};
+		D2B24C1821270CF2006442BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M5AQP3WXJE;
+				INFOPLIST_FILE = LQAlbumFinderUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LQAlbumFinder;
+			};
+			name = Debug;
+		};
+		D2B24C1921270CF2006442BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M5AQP3WXJE;
+				INFOPLIST_FILE = LQAlbumFinderUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LQAlbumFinder;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D2B24BE421270CF0006442BB /* Build configuration list for PBXProject "LQAlbumFinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2B24C0F21270CF2006442BB /* Debug */,
+				D2B24C1021270CF2006442BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2B24C1121270CF2006442BB /* Build configuration list for PBXNativeTarget "LQAlbumFinder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2B24C1221270CF2006442BB /* Debug */,
+				D2B24C1321270CF2006442BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2B24C1421270CF2006442BB /* Build configuration list for PBXNativeTarget "LQAlbumFinderTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2B24C1521270CF2006442BB /* Debug */,
+				D2B24C1621270CF2006442BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2B24C1721270CF2006442BB /* Build configuration list for PBXNativeTarget "LQAlbumFinderUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2B24C1821270CF2006442BB /* Debug */,
+				D2B24C1921270CF2006442BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D2B24BE121270CF0006442BB /* Project object */;
+}
