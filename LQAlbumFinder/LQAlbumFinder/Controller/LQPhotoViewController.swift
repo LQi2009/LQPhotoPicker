@@ -32,11 +32,8 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
     var columnNumber: Int = 4
     
     private var photoAlbum: LQAlbumItem?// 相机胶卷
-    
     private var photoSavedAlbum: LQAlbumItem?// 保存拍摄照片的相册
     private var dataSource: [LQPhotoItem] = []
-    
-    
     private lazy var activity: UIActivityIndicatorView = {
         
         let acti = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
@@ -114,6 +111,29 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         self.setupBottomBar()
         
         PHPhotoLibrary.shared().register(self)
+    }
+    
+    @discardableResult
+    public class func show(_ viewController: UIViewController, style: LQPhotoCollectionStyle = .regular) -> LQPhotoViewController {
+        
+        let photo = LQPhotoViewController()
+        let navi = UINavigationController(rootViewController: photo)
+        photo.style = style
+        
+        var handler: (() -> Void)? = nil
+        
+        if style == .regular {
+            handler = {
+                
+                let album = LQAlbumViewController()
+                var vcs = navi.childViewControllers
+                vcs.insert(album, at: 0)
+                navi.setViewControllers(vcs, animated: false)
+            }
+        }
+        
+        viewController.present(navi, animated: true, completion: handler)
+        return photo
     }
     
     private func loadData() {

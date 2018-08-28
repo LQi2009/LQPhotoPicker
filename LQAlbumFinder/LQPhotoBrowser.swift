@@ -154,7 +154,7 @@ class LQPhotoBrowser: UIView , UICollectionViewDelegate, UICollectionViewDataSou
         }
         
         let indexPath = IndexPath(item: 0, section: currentIndex)
-        print("scrollViewWillBeginDecelerating \(indexPath)")
+        
         let collection = scrollView as! UICollectionView
         collection.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         

@@ -35,22 +35,27 @@ class LQPhotoPicker {
             photo.style = .photos
             viewController.present(navi, animated: true, completion: nil)
         } else if type == .videos {
-            let photo = LQPhotoViewController()
-            let navi = UINavigationController(rootViewController: photo)
-            photo.style = .videos
-            viewController.present(navi, animated: true, completion: nil)
-        } else {
-            let photo = LQPhotoViewController()
-            let navi = UINavigationController(rootViewController: photo)
-            photo.style = .regular
-            photo.camaraEnable = true
-            viewController.present(navi, animated: true) {
-                let album = LQAlbumViewController()
-                var vcs = navi.childViewControllers
-                vcs.insert(album, at: 0)
-                navi.setViewControllers(vcs, animated: false)
-            }
+//            let photo = LQPhotoViewController()
+//            let navi = UINavigationController(rootViewController: photo)
+//            photo.style = .videos
+//            viewController.present(navi, animated: true, completion: nil)
             
+            LQPhotoViewController.show(viewController, style: .videos)
+        } else {
+//            let photo = LQPhotoViewController()
+//            let navi = UINavigationController(rootViewController: photo)
+//            photo.style = .regular
+//            photo.camaraEnable = true
+//            viewController.present(navi, animated: true) {
+//                let album = LQAlbumViewController()
+//                var vcs = navi.childViewControllers
+//                vcs.insert(album, at: 0)
+//                navi.setViewControllers(vcs, animated: false)
+//            }
+            
+            let photo = LQPhotoViewController.show(viewController)
+            
+            photo.camaraEnable = true
             photo.didSelectedItems({[weak self] (items) in
                 self?.didSelected(items)
             })
