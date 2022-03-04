@@ -15,7 +15,7 @@ class LQAlbumViewController: UITableViewController {
     
     private lazy var activity: UIActivityIndicatorView = {
         
-        let acti = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        let acti = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
         acti.hidesWhenStopped = true
         acti.center = self.view.center
         self.view.addSubview(acti)

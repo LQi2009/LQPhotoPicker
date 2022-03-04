@@ -13,7 +13,7 @@ class LQPhotoCameraCell: UICollectionViewCell {
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = UIColor.white
-        imageView.contentMode = UIViewContentMode.scaleAspectFill
+        imageView.contentMode = UIView.ContentMode.scaleAspectFill
         //        imageView.layer.masksToBounds = true
         imageView.image = UIImage(named: LQPhotoIcon_camera)
         self.contentView.addSubview(imageView)

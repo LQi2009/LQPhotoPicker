@@ -281,10 +281,12 @@
 					};
 					D2B24BFC21270CF2006442BB = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1030;
 						TestTargetID = D2B24BE821270CF0006442BB;
 					};
 					D2B24C0721270CF2006442BB = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1030;
 						TestTargetID = D2B24BE821270CF0006442BB;
 					};
 				};
@@ -539,7 +541,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -557,7 +559,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinder;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -577,7 +579,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LQAlbumFinder.app/LQAlbumFinder";
 			};
@@ -598,7 +600,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LQAlbumFinder.app/LQAlbumFinder";
 			};
@@ -618,7 +620,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = LQAlbumFinder;
 			};
@@ -638,7 +640,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ldshare.LQAlbumFinderUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = LQAlbumFinder;
 			};

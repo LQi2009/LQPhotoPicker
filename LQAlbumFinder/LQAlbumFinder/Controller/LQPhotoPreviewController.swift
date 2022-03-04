@@ -181,46 +181,15 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     var isBeginDrag: Bool = false
-    var effectiveSlidingDistance: CGFloat = 30.0
+    var effectiveSlidingDistance: CGFloat = 20.0
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        
+
+
         isBeginDrag = true
         beginDragOffset = scrollView.contentOffset
     }
-    
-    //    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    //
-    //        if isBeginDrag == false {
-    //            return
-    //        }
-    //
-    //        isBeginDrag = false
-    //        var currentIndex: Int = currentIndexPath.row
-    //
-    //        let currentOffset = scrollView.contentOffset.x - beginDragOffset.x
-    //        //向左滑动
-    //        if currentOffset - effectiveSlidingDistance > 0 {
-    //            // 如果滑动达到一定幅度, 则滚动到下一个
-    //            currentIndex += 1
-    //            if currentIndex >= dataSource.count {
-    //                currentIndex = dataSource.count - 1
-    //            }
-    //        } else if currentOffset + effectiveSlidingDistance < 0  {
-    //            // 如果滑动达到一定幅度, 则滚动到前一个
-    //            currentIndex -= 1
-    //            if currentIndex < 0 {
-    //                currentIndex = 0
-    //            }
-    //        }
-    //
-    //        let collection = scrollView as! UICollectionView
-    //        currentIndexPath = IndexPath(item: currentIndex, section: 0)
-    //        collection.scrollToItem(at: currentIndexPath, at: .centeredHorizontally, animated: true)
-    //
-    //        setSelectedButtonState(currentIndexPath)
-    //    }
+   
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         
         var currentIndex: Int = currentIndexPath.section
@@ -266,9 +235,9 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
         keyAnimation.values = [0.9, 0.84, 0.8, 0.9, 1.0, 1.1, 1.2, 1.1, 1.0]
         keyAnimation.repeatCount = 1
         keyAnimation.isRemovedOnCompletion = false
-        keyAnimation.fillMode = kCAFillModeForwards
+        keyAnimation.fillMode = CAMediaTimingFillMode.forwards
         keyAnimation.duration = 0.6
-        keyAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        keyAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         view.layer.add(keyAnimation, forKey: "keyFrameAnima")
     }
     
@@ -313,32 +282,6 @@ extension LQPhotoPreviewController {
     }
     
     fileprivate func layoutTopBar() {
-        
-//        let topView = UIView()
-//        topView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
-//        self.view.addSubview(topView)
-//        topBar = topView
-//
-//        let bgView = UIView()
-//        bgView.frame = topView.bounds
-//        bgView.backgroundColor = UIColor.black
-//        bgView.alpha = 0.8
-//        topView.addSubview(bgView)
-//
-//        let backButton = UIButton(type: .custom)
-//        backButton.setBackgroundImage(UIImage.init(named: LQPhotoIcon_back), for: .normal)
-//        backButton.addTarget(self, action: #selector(backButtonAction), for: .touchUpInside)
-//        backButton.frame = CGRect(x: 10, y: 12, width: 22, height: 40)
-//        topView.addSubview(backButton)
-//
-//        let selectButton = UIButton(type: .custom)
-//        selectButton.setBackgroundImage(UIImage.init(named: LQPhotoIcon_itemUnSelected), for: .normal)
-//        selectButton.setBackgroundImage(UIImage.init(named: LQPhotoIcon_itemSelected), for: .selected)
-//        selectButton.addTarget(self, action: #selector(selectedButtonAction), for: .touchUpInside)
-//
-//        selectButton.frame = CGRect(x: self.view.frame.width - 40, y: (64 - 30)/2.0, width: 30, height: 30)
-//        topView.addSubview(selectButton)
-//        selectedButton = selectButton
         
         self.topBar.backWithHandler {[weak self] (button) in
             self?.backButtonAction(button)
@@ -398,7 +341,7 @@ extension LQPhotoPreviewController {
             selectedItems.append(item)
         } else {
             
-            let index = selectedItems.index(of: item)
+            let index = selectedItems.firstIndex(of: item)
             if let ix = index {
                 selectedItems.remove(at: ix)
             }
@@ -408,7 +351,7 @@ extension LQPhotoPreviewController {
                 im.selectedNumber = i + 1
                 selectedItems[i] = im
                 
-                let index = dataSource.index(of: im)
+                let index = dataSource.firstIndex(of: im)
                 dataSource[index!] = im
             }
             
@@ -516,13 +459,6 @@ extension LQPhotoPreviewController {
         if selectedItems.count > 0 {
             bottomBar.commitButton.isEnabled = true
             bottomBar.commitButton.setTitle("确定(\(selectedItems.count))", for: .normal)
-            
-            
-//            if selectedItems.count > 9 {
-//                var frame = commitButton.frame
-//                frame.origin.x -= 10
-//                frame.size.width += 10
-//            }
         } else {
             bottomBar.commitButton.isEnabled = false
             bottomBar.commitButton.setTitle("确定", for: .normal)

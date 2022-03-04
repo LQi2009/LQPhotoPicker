@@ -56,8 +56,10 @@ class LQPhotoPicker {
             let photo = LQPhotoViewController.show(viewController)
             
             photo.camaraEnable = true
-            photo.didSelectedItems({[weak self] (items) in
-                self?.didSelected(items)
+//            photo.delegate = self
+            photo.didSelectedItems({(items) in
+//                let sf = self
+                self.didSelected(items)
             })
         }
     }
@@ -68,6 +70,13 @@ class LQPhotoPicker {
         }
     }
     
+}
+
+extension LQPhotoPicker: LQPhotoViewControllerDelegate {
+    
+    func photoViewController(_ viewController: LQPhotoViewController, didSelectedItems items: [LQPhotoItem]) {
+        self.didSelected(items)
+    }
 }
 
 protocol LQPhotoPickerDelegate {

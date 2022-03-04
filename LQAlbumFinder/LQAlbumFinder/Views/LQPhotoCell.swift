@@ -195,9 +195,9 @@ class LQPhotoCell: UICollectionViewCell {
         keyAnimation.values = [0.9, 0.84, 0.8, 0.9, 1.0, 1.1, 1.2, 1.1, 1.0]
         keyAnimation.repeatCount = 1
         keyAnimation.isRemovedOnCompletion = false
-        keyAnimation.fillMode = kCAFillModeForwards
+        keyAnimation.fillMode = CAMediaTimingFillMode.forwards
         keyAnimation.duration = 0.6
-        keyAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        keyAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         view.layer.add(keyAnimation, forKey: "keyFrameAnima")
     }
 }

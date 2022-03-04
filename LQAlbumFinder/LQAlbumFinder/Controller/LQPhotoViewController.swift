@@ -30,13 +30,15 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
     var camaraEnable: Bool = false
     var albumItem: LQAlbumItem?
     var columnNumber: Int = 4
+    var delegate: LQPhotoViewControllerDelegate?
+    
     
     private var photoAlbum: LQAlbumItem?// 相机胶卷
     private var photoSavedAlbum: LQAlbumItem?// 保存拍摄照片的相册
     private var dataSource: [LQPhotoItem] = []
     private lazy var activity: UIActivityIndicatorView = {
         
-        let acti = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        let acti = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.gray)
         acti.hidesWhenStopped = true
         acti.center = self.view.center
         self.view.addSubview(acti)
@@ -126,7 +128,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             handler = {
                 
                 let album = LQAlbumViewController()
-                var vcs = navi.childViewControllers
+                var vcs = navi.children
                 vcs.insert(album, at: 0)
                 navi.setViewControllers(vcs, animated: false)
             }
@@ -171,7 +173,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 var allPhoto: LQAlbumItem? = nil
                 let albums = LQAlbumManager.shared.fetchAlbums()
                 for am in albums {
-                    if am.name == "相机胶卷" {
+                    if am.name == "相机胶卷" || am.name == "最近的" {
                         self.albumItem = am
 //                        break
                     } else if am.name == "所有照片" {
@@ -184,9 +186,13 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 }
             }
             
-            title = (self.albumItem?.name)!
-            let results = LQAlbumManager.shared.fetchAssetsFrom(albumItem!)
-            dataSource += results
+            if let item = albumItem {
+                title = item.name
+                let results = LQAlbumManager.shared.fetchAssetsFrom(item)
+                dataSource += results
+            }
+            
+            
         }
         
         DispatchQueue.main.async {
@@ -236,12 +242,12 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         
         let layout = UICollectionViewFlowLayout()
         if LQAlbum_iPad {
-            col = 10
+            col = 6
         }
         layout.itemSize = CGSize(width: (UIScreen.main.bounds.width - space * CGFloat(col + 1))/CGFloat(col), height: (UIScreen.main.bounds.width - space * CGFloat(col + 1))/CGFloat(col))
         layout.minimumLineSpacing = space
         layout.minimumInteritemSpacing = space
-        layout.sectionInset = UIEdgeInsetsMake(space, space, space, space)
+        layout.sectionInset = UIEdgeInsets(top: space, left: space, bottom: space, right: space)
         self.init(collectionViewLayout: layout)
     }
     
@@ -286,6 +292,8 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             
             self.dismiss(animated: true, completion: nil)
         }
+        
+        self.delegate?.photoViewControllerCanceled(self)
     }
     
     @objc private func backButtonAction() {
@@ -391,7 +399,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             selectedItems.append(item)
         } else {
             
-            let index = selectedItems.index(of: item)
+            let index = selectedItems.firstIndex(of: item)
             
             if let ix = index {
                 selectedItems.remove(at: ix)
@@ -402,7 +410,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 im.selectedNumber = i + 1
                 selectedItems[i] = im
                 
-                let index = dataSource.index(of: im)
+                let index = dataSource.firstIndex(of: im)
                 dataSource[index!] = im
             }
         }
@@ -435,7 +443,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         let alert = UIAlertController(title: title, message: "是否去设置中添加访问权限?", preferredStyle: .alert)
         let ok = UIAlertAction(title: "去设置", style: .default, handler: { (action) in
             
-            let url = URL(string: UIApplicationOpenSettingsURLString)
+            let url = URL(string: UIApplication.openSettingsURLString)
             if UIApplication.shared.canOpenURL(url!) {
                 if #available(iOS 10.0, *) {
                     UIApplication.shared.open(url!, options: [:], completionHandler: nil)
@@ -479,7 +487,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 let picker = UIImagePickerController()
                 picker.delegate = self
                 picker.allowsEditing = true
-                picker.sourceType = UIImagePickerControllerSourceType.camera
+                picker.sourceType = UIImagePickerController.SourceType.camera
                 picker.cameraCaptureMode = .photo
                 picker.modalPresentationStyle = .fullScreen
                 
@@ -496,9 +504,10 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         picker.dismiss(animated: true, completion: nil)
     }
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
         picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             
             return
         }
@@ -677,6 +686,8 @@ extension LQPhotoViewController {
             handle(selectedItems)
         }
         
+        self.delegate?.photoViewController(self, didSelectedItems: selectedItems)
+        
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -686,7 +697,7 @@ extension LQPhotoViewController {
             self.bottomBar.resetCommitButtonTitle("确定(\(selectedItems.count))")
             self.bottomBar.actionEnable = true
         } else {
-            self.bottomBar.resetCommitButtonTitle("确定)")
+            self.bottomBar.resetCommitButtonTitle("确定")
             self.bottomBar.actionEnable = false
         }
     }
@@ -697,7 +708,7 @@ extension LQPhotoViewController: PHPhotoLibraryChangeObserver {
         
         print("photoLibraryDidChange")
         
-        if let changes = changeInstance.changeDetails(for: (self.photoSavedAlbum?.assetCollection)!) {
+        if let collection = self.photoSavedAlbum?.assetCollection, let changes = changeInstance.changeDetails(for: collection) {
             
             if let album = changes.objectAfterChanges {
                 
@@ -714,18 +725,11 @@ extension LQPhotoViewController: PHPhotoLibraryChangeObserver {
                         }
                     }
                 }
-                
-                
             }
         }
         
     }
 }
-
-//extension LQPhotoViewController {
-//
-//
-//}
 
 private var currentPath: IndexPath?
 extension LQPhotoViewController {
@@ -756,4 +760,14 @@ extension LQPhotoViewController {
             //            }
         }
     }
+}
+
+
+protocol LQPhotoViewControllerDelegate {
+    func photoViewController(_ viewController: LQPhotoViewController, didSelectedItems items:[LQPhotoItem])
+    func photoViewControllerCanceled(_ viewController: LQPhotoViewController)
+}
+
+extension LQPhotoViewControllerDelegate {
+    func photoViewControllerCanceled(_ viewController: LQPhotoViewController) {}
 }

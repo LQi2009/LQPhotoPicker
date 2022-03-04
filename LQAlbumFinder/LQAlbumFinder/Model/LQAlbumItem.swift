@@ -29,6 +29,7 @@ public class LQAlbumItem {
     }
     
     private func checkTitle(_ title: String) -> String {
+        print(title)
         
         switch title {
         case "Slo-mo":
@@ -59,7 +60,9 @@ public class LQAlbumItem {
             return "延时摄影"
         case "All Photos":
             return "所有照片"
-            
+        case "Recents":
+            return "最近的"
+
         default:
             return title
         }

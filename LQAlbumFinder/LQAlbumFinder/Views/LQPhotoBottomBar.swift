@@ -55,6 +55,7 @@ class LQPhotoBottomBar: UIView {
         originBtn.setImage(UIImage.init(named: LQPhotoIcon_originalUnSelected), for: .normal)
         originBtn.setImage(UIImage.init(named: LQPhotoIcon_originalSelected), for: .selected)
         originBtn.addTarget(self, action: #selector(originButtonAction), for: .touchUpInside)
+        originBtn.titleEdgeInsets = UIEdgeInsets(top: 0, left: 6, bottom: 0, right: 0)
         self.addSubview(originBtn)
         
         return originBtn
@@ -66,7 +67,10 @@ class LQPhotoBottomBar: UIView {
         
         sendBtn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         sendBtn.setTitle("确定", for: .normal)
-        sendBtn.setBackgroundImage(UIImage.init(named: LQPhotoIcon_commitButtonBg), for: .normal)
+        if let bg = UIImage.init(named: LQPhotoIcon_commitButtonBg) {
+            sendBtn.setBackgroundImage(bg.stretchableImage(withLeftCapWidth: Int(bg.size.width/2.0), topCapHeight: Int(bg.size.height)), for: .normal)
+        }
+        
         sendBtn.setTitleColor(UIColor.lightGray, for: .disabled)
         sendBtn.isEnabled = false
         sendBtn.addTarget(self, action: #selector(commitButtonAction), for: .touchUpInside)
@@ -117,7 +121,7 @@ class LQPhotoBottomBar: UIView {
         
         self.originButton.bounds = CGRect(x: 0, y: 0, width: 100, height: 49)
         self.originButton.center = CGPoint(x: self.frame.width/2.0, y: self.frame.height/2.0)
-        self.commitButton.frame = CGRect(x: self.frame.width - 70, y: 5, width: 60, height: 39)
+        self.commitButton.frame = CGRect(x: self.frame.width - 100, y: 5, width: 80, height: 39)
     }
     /*
     // Only override draw() if you perform custom drawing.

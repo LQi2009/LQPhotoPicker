@@ -43,6 +43,8 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         }
     }
     var minScale: CGFloat = 1.0
+    var imageScale: CGFloat = 2.0
+    var reqID: Int32 = -1
     
     
     override init(frame: CGRect) {
@@ -76,11 +78,12 @@ class LQPhotoPreviewCell: UICollectionViewCell {
     }
     
     @objc func doupleTapGesture(_ gesture: UITapGestureRecognizer) {
-        
+
         if scroll.zoomScale != 1 {
             scroll.setZoomScale(1.0, animated: true)
         } else {
-            scroll.setZoomScale(maxScale, animated: true)
+            scroll.setZoomScale(imageScale, animated: true)
+
         }
     }
     
@@ -94,15 +97,15 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         
         let manager = PHCachingImageManager.default()
         
-        if self.tag != 0 {
-            let resID = PHImageRequestID(self.tag)
+        if self.reqID > 0 {
+            let resID = PHImageRequestID(self.reqID)
             
             manager.cancelImageRequest(resID)
         }
         
         let size = self.bounds.size
         
-        let resID = manager.requestImage(for: item.asset, targetSize: CGSize.init(width: size.width*LQAlbumWindowScale, height: size.height*LQAlbumWindowScale), contentMode: .aspectFill, options: nil) { (image, info) in
+        self.reqID = manager.requestImage(for: item.asset, targetSize: CGSize.init(width: size.width*LQAlbumWindowScale, height: size.height*LQAlbumWindowScale), contentMode: .aspectFill, options: nil) { (image, info) in
             guard let img = image else {
                 return
             }
@@ -110,11 +113,17 @@ class LQPhotoPreviewCell: UICollectionViewCell {
             self.zoomView.image = img
         }
         
-        self.tag = Int(resID)
         imageWidth = CGFloat(item.asset.pixelWidth)
         imageHeight = CGFloat(item.asset.pixelHeight)
         
         self.layoutZoomViewFrame()
+        if imageWidth / imageHeight > size.width / size.height {
+            imageScale = (imageWidth * size.height) / (size.width * imageHeight)
+        } else {
+            imageScale = (size.width * imageHeight) / (imageWidth * size.height)
+        }
+        
+        maxScale = imageScale + 1
     }
     
     func reset() {
@@ -188,7 +197,7 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         zoomView.frame = zoomFrame
         
         self.scroll.setZoomScale(1.0, animated: false)
-        maxScale = 2.0
+//        maxScale = 3.0
     }
 }
 
