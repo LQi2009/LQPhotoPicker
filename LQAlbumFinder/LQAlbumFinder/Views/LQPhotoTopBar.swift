@@ -29,8 +29,8 @@ class LQPhotoTopBar: UIView {
         
         let btn = UIButton(type: .custom)
         
-        btn.imageView?.contentMode = .scaleAspectFit
-        btn.setBackgroundImage(UIImage.init(named: LQPhotoIcon_back), for: .normal)
+//        btn.imageView?.contentMode = .scaleAspectFit
+        btn.setImage(UIImage.init(named: LQPhotoIcon_back), for: .normal)
         btn.addTarget(self, action: #selector(backButtonAction), for: .touchUpInside)
         self.addSubview(btn)
         return btn
@@ -40,6 +40,7 @@ class LQPhotoTopBar: UIView {
         
         let btn = UIButton(type: .custom)
         
+        btn.setTitleColor(UIColor.gray, for: .normal)
         btn.setBackgroundImage(UIImage.init(named: LQPhotoIcon_itemUnSelected), for: .normal)
         btn.setBackgroundImage(UIImage.init(named: LQPhotoIcon_itemSelected), for: .selected)
         btn.addTarget(self, action: #selector(selectedButtonAction), for: .touchUpInside)

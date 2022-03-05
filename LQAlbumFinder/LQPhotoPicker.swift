@@ -59,6 +59,7 @@ class LQPhotoPicker {
             
             photo.camaraEnable = true
 //            photo.delegate = self
+            
             photo.didSelectedItems({(items) in
 //                let sf = self
                 self.didSelected(items)

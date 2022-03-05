@@ -43,6 +43,7 @@ class LQPhotoCell: UICollectionViewCell {
         
         let selectButton = UIButton(type: .custom)
         selectButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        selectButton.setTitleColor(UIColor.gray, for: .normal)
         selectButton.setBackgroundImage(UIImage.init(named: LQPhotoIcon_itemUnSelected), for: .normal)
         selectButton.setBackgroundImage(UIImage.init(named: LQPhotoIcon_itemSelected), for: .selected)
         selectButton.addTarget(self, action: #selector(selectedButtonAction), for: .touchUpInside)
@@ -192,7 +193,7 @@ class LQPhotoCell: UICollectionViewCell {
         //        })
         // 动画方式三
         let keyAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
-        keyAnimation.values = [0.9, 0.84, 0.8, 0.9, 1.0, 1.1, 1.2, 1.1, 1.0]
+        keyAnimation.values = [0.9, 0.8, 0.9, 1.0, 1.1, 1.2, 1.1, 1.0]
         keyAnimation.repeatCount = 1
         keyAnimation.isRemovedOnCompletion = false
         keyAnimation.fillMode = CAMediaTimingFillMode.forwards

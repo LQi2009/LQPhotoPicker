@@ -9,9 +9,11 @@
 
 import UIKit
 
-class LQAlbumViewController: UITableViewController {
+class LQAlbumViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     private var dataSources: [LQAlbumItem] = []
+    
+    private var isNavigationBarHidden: Bool = false
     
     private lazy var activity: UIActivityIndicatorView = {
         
@@ -22,16 +24,74 @@ class LQAlbumViewController: UITableViewController {
         return acti;
     }()
     
+    private lazy var topView: UIView = {
+        
+        let top = UIView()
+        
+        top.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
+        view.addSubview(top)
+        return top
+    }()
+    
+    private lazy var cancelButton: UIButton = {
+        
+        let cancelButton = UIButton(type: .custom)
+        
+        cancelButton.setImage(UIImage(named: LQPhotoIcon_cancel), for: .normal)
+        cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
+        
+        topView.addSubview(cancelButton)
+        return cancelButton
+    }()
+    
+    private lazy var titleLabel: UILabel = {
+        
+        let lb = UILabel()
+        
+        lb.textColor = UIColor.white
+        lb.textAlignment = .center
+        lb.font = UIFont.boldSystemFont(ofSize: 18)
+        topView.addSubview(lb)
+        return lb
+    }()
+    
+    lazy var tableView: UITableView = {
+        
+        let table = UITableView(frame: .zero, style: .plain)
+        
+        table.delegate = self
+        table.dataSource = self
+//        view.addSubview(table)
+        view.insertSubview(table, belowSubview: topView)
+        return table
+    }()
+    
     deinit {
         print("LQAlbumTableViewController deinit")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let nav = self.navigationController {
+            isNavigationBarHidden = nav.isNavigationBarHidden
+            nav.isNavigationBarHidden = true
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let nav = self.navigationController {
+            nav.isNavigationBarHidden = isNavigationBarHidden
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.barStyle = .blackTranslucent
-        self.title = "相册"
-        setupNavBar()
+
+        titleLabel.text = "相册"
         
+//        self.tableView.tableHeaderView = self.topView
         self.tableView.register(LQAlbumCell.self, forCellReuseIdentifier: "LQAlbumTableViewCellReuseIdentifier")
         self.tableView.tableFooterView = UIView()
         
@@ -56,20 +116,17 @@ class LQAlbumViewController: UITableViewController {
             }
         }
     }
-
-    private func setupNavBar() {
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         
-        let cancelButton = UIButton(type: .custom)
-        cancelButton.setTitle("取消", for: .normal)
-        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        cancelButton.setTitleColor(UIColor.white, for: .normal)
-        cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
-        cancelButton.frame = CGRect(x: self.view.frame.width - 60, y: 20, width: 50, height: 44)
+        tableView.frame = view.bounds
+        let theight =  (44 + self.view.safeAreaInsets.top)
+        topView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: theight)
+        cancelButton.frame = CGRect(x: self.view.frame.width - 60.0, y: theight - 40, width: 50.0, height: 30.0)
+        titleLabel.frame = CGRect(x: 70, y: theight - 40.0, width: self.view.frame.width - 140.0, height: 30.0)
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
-        
-        let leftBar = UIBarButtonItem(customView: UIView())
-        self.navigationItem.leftBarButtonItem = leftBar
+        tableView.contentInset = UIEdgeInsets(top: self.view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -79,15 +136,15 @@ class LQAlbumViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSources.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LQAlbumTableViewCellReuseIdentifier", for: indexPath) as! LQAlbumCell
         
         let item = dataSources[indexPath.row]
@@ -97,11 +154,11 @@ class LQAlbumViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let item = dataSources[indexPath.row]

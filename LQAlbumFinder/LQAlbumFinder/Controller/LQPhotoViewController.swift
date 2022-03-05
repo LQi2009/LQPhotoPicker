@@ -57,8 +57,53 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         return PHCachingImageManager()
     }()
     
+    private lazy var topView: UIView = {
+        
+        let top = UIView()
+        
+        top.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
+        view.addSubview(top)
+        return top
+    }()
+    
+    private lazy var cancelButton: UIButton = {
+        
+        let cancelButton = UIButton(type: .custom)
+        
+        cancelButton.setImage(UIImage(named: LQPhotoIcon_cancel), for: .normal)
+        cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
+        
+        topView.addSubview(cancelButton)
+        return cancelButton
+    }()
+    
+    private lazy var backButton: UIButton = {
+        
+        let btn = UIButton(type: .custom)
+        
+        btn.imageView?.contentMode = .scaleAspectFit
+        btn.setImage(UIImage(named: LQPhotoIcon_back), for: .normal)
+        
+        btn.addTarget(self, action: #selector(backButtonAction), for: .touchUpInside)
+        
+        topView.addSubview(btn)
+        return btn
+    }()
+    
+    private lazy var titleLabel: UILabel = {
+        
+        let lb = UILabel()
+        
+        lb.textColor = UIColor.white
+        lb.textAlignment = .center
+        lb.font = UIFont.boldSystemFont(ofSize: 18)
+        topView.addSubview(lb)
+        return lb
+    }()
+    
     private var selectedHandle: LQPhotoSelectedHandler?
     fileprivate var previousPreheatRect = CGRect.zero
+    private var isNavigationBarHidden: Bool = false
     
     deinit {
         print("LQPhotoCollectionViewController deinit")
@@ -66,17 +111,41 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let nav = self.navigationController {
+            isNavigationBarHidden = nav.isNavigationBarHidden
+            nav.isNavigationBarHidden = true
+        }
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let nav = self.navigationController {
+            nav.isNavigationBarHidden = isNavigationBarHidden
+        }
+    }
+    
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        var colFrame = collectionView?.frame
-        colFrame?.size.height -= 49
         collectionView?.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+        
+        let theight =  (44 + self.view.safeAreaInsets.top)
+        topView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: theight)
         
         let height =  (49 + self.view.safeAreaInsets.bottom)
         bottomBar.frame = CGRect(x: 0, y: self.view.frame.height - height, width: self.view.frame.width, height:height)
         
-        collectionView.contentInset = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: height, right: 0)
+        collectionView.contentInset = UIEdgeInsets(top: theight, left: 0, bottom: height, right: 0)
+        
+        cancelButton.frame = CGRect(x: self.view.frame.width - 60, y: theight - 40, width: 50, height: 30)
+        
+        backButton.frame = CGRect(x: 10, y: theight - 40, width: 50, height: 30)
+        
+        backButton.isHidden = (style == .regular) ? false: true
+        titleLabel.frame = CGRect(x: 70, y: theight - 40, width: self.view.frame.width - 140, height: 30)
     }
     
     override public func viewDidLoad() {
@@ -88,14 +157,14 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             self.automaticallyAdjustsScrollViewInsets = false
         }
         
-        self.navigationController?.navigationBar.barStyle = .black
-        self.navigationController?.navigationBar.isTranslucent = true
+//        self.navigationController?.navigationBar.barStyle = .black
+//        self.navigationController?.navigationBar.isTranslucent = true
         self.collectionView!.register(LQPhotoCell.self, forCellWithReuseIdentifier: LQPhotoCell.reuseIdentifier)
         self.collectionView?.register(LQPhotoCameraCell.self, forCellWithReuseIdentifier: LQPhotoCameraCell.reuseIdentifier)
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.bounces = true
         
-        self.title = "相册"
+        self.titleLabel.text = "相册"
         
         if self.albumItem == nil {
             
@@ -116,7 +185,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             }
         }
         
-        self.setupNavBar()
         self.setupBottomBar()
         
         PHPhotoLibrary.shared().register(self)
@@ -141,6 +209,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             }
         }
         
+        navi.modalPresentationStyle = .fullScreen
         viewController.present(navi, animated: true, completion: handler)
         return photo
     }
@@ -198,10 +267,9 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         }
         
         DispatchQueue.main.async {
-            self.title = title
+            self.titleLabel.text = title
             if self.dataSource.count > 0 {
 
-                self.title = title
                 self.collectionView?.reloadData()
                 var index = IndexPath(item: self.dataSource.count - 1, section: 0)
                 if self.camaraEnable {
@@ -258,36 +326,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
     override public func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-
-    private func setupNavBar() {
-        
-        let cancelButton = UIButton(type: .custom)
-        cancelButton.setTitle("取消", for: .normal)
-        cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        cancelButton.setTitleColor(UIColor.white, for: .normal)
-        cancelButton.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
-        cancelButton.frame = CGRect(x: self.view.frame.width - 50, y: 20, width: 50, height: 44)
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: cancelButton)
-        
-        if style == .regular {
-            let backBtn = UIButton(type: .custom)
-            backBtn.setTitle("返回", for: .normal)
-            backBtn.setImage(UIImage.init(named: LQPhotoIcon_back), for: .normal)
-            backBtn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-            backBtn.setTitleColor(UIColor.white, for: .normal)
-            backBtn.addTarget(self, action: #selector(backButtonAction), for: .touchUpInside)
-            backBtn.frame = CGRect(x: 0, y: 0, width: 54, height: 44)
-            
-            let leftBar = UIBarButtonItem(customView: backBtn)
-            self.navigationItem.leftBarButtonItem = leftBar
-        } else {
-            
-            let leftBar = UIBarButtonItem(customView: UIView())
-            self.navigationItem.leftBarButtonItem = leftBar
-            self.navigationItem.leftBarButtonItem?.isEnabled = false
-        }
     }
     
     @objc private func cancelButtonAction() {

@@ -49,7 +49,7 @@ class LQPhotoBottomBar: UIView {
         
         let originBtn = UIButton(type: .custom)
         
-        originBtn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        originBtn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         originBtn.setTitle("原图", for: .normal)
         originBtn.setTitleColor(UIColor.lightGray, for: .disabled)
         originBtn.setImage(UIImage.init(named: LQPhotoIcon_originalUnSelected), for: .normal)
@@ -116,26 +116,12 @@ class LQPhotoBottomBar: UIView {
         
         self.backgroundView.frame = self.bounds
         if self.previewHandler != nil {
-            self.previewButton.frame = CGRect(x: 10, y: 0, width: 50, height: 49)
+            self.previewButton.frame = CGRect(x: 10, y: 0, width: 50, height: 50)
         }
         
-        self.originButton.frame = CGRect(x: self.center.x - 50, y: 0, width: 100, height: 49)
-//        self.originButton.bounds = CGRect(x: 0, y: 0, width: 100, height: 49)
-//        self.originButton.center = CGPoint(x: self.frame.width/2.0, y: self.frame.height/2.0)
-        self.commitButton.frame = CGRect(x: self.frame.width - 100, y: 5, width: 80, height: 39)
+        self.originButton.frame = CGRect(x: self.center.x - 50, y: 0, width: 100, height: 50)
+
+        self.commitButton.frame = CGRect(x: self.frame.width - 100, y: 0, width: 80, height: 50)
     }
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
-    
-//    func isNotchScreen() -> Bool {
-//        if UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiomPhone {
-//            return NOSTR
-//        }
-//    }
 
 }
