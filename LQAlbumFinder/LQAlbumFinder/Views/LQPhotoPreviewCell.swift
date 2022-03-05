@@ -12,6 +12,56 @@ import Photos
 typealias LQPhotoPreviewCellTapHandler = () -> Void
 class LQPhotoPreviewCell: UICollectionViewCell {
     
+    var singleTapHandle: LQPhotoPreviewCellTapHandler?
+    
+    var photo: LQPhotoItem?
+    
+    lazy var imageView: UIImageView = {
+        
+        let img = UIImageView()
+        img.contentMode = .scaleAspectFit
+        return img
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = UIColor.black
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doupleTapGesture))
+        doubleTap.numberOfTapsRequired = 2
+        self.addGestureRecognizer(doubleTap)
+        
+        let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapGesture))
+        self.addGestureRecognizer(singleTap)
+        // 避免单双击冲突
+        singleTap.require(toFail: doubleTap)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func singleTapAction(_ handle: @escaping LQPhotoPreviewCellTapHandler) {
+        singleTapHandle = handle
+    }
+    
+    func configData(_ item: LQPhotoItem) {
+        
+        
+    }
+    func reset() {}
+    
+    @objc func doupleTapGesture(_ gesture: UITapGestureRecognizer) {}
+    @objc func singleTapGesture( _ gesture: UITapGestureRecognizer) {}
+}
+
+
+
+//MARK: - 图片预览 LQPhotoImagePreviewCell
+class LQPhotoImagePreviewCell: LQPhotoPreviewCell {
+    
+    static let reuseIdentifier = "LQPhotoPreviewCellReuseID"
+    
     lazy var scroll: UIScrollView = {
         
         let sl = UIScrollView()
@@ -25,17 +75,8 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         return sl
     }()
     
-    lazy var zoomView: UIImageView = {
-        
-        let img = UIImageView()
-        img.contentMode = .scaleAspectFit
-        //        img.backgroundColor = UIColor.green
-        return img
-    }()
-    
     var imageWidth: CGFloat = 0
     var imageHeight: CGFloat = 0
-    var singleTapHandle: LQPhotoPreviewCellTapHandler?
     var maxScale: CGFloat = 3.0 {
         
         didSet {
@@ -46,28 +87,14 @@ class LQPhotoPreviewCell: UICollectionViewCell {
     var imageScale: CGFloat = 2.0
     var reqID: Int32 = -1
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.black
         
-        scroll.addSubview(zoomView)
-        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doupleTapGesture))
-        doubleTap.numberOfTapsRequired = 2
-        self.addGestureRecognizer(doubleTap)
-        
-        let singleTap = UITapGestureRecognizer(target: self, action: #selector(singleTapGesture))
-        self.addGestureRecognizer(singleTap)
-        // 避免单双击冲突
-        singleTap.require(toFail: doubleTap)
+        scroll.addSubview(imageView)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func singleTapAction(_ handle: @escaping LQPhotoPreviewCellTapHandler) {
-        singleTapHandle = handle
     }
     
     override func layoutSubviews() {
@@ -77,23 +104,7 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         self.zoomViewToCenter()
     }
     
-    @objc func doupleTapGesture(_ gesture: UITapGestureRecognizer) {
-
-        if scroll.zoomScale != 1 {
-            scroll.setZoomScale(1.0, animated: true)
-        } else {
-            scroll.setZoomScale(imageScale, animated: true)
-
-        }
-    }
-    
-    @objc func singleTapGesture( _ gesture: UITapGestureRecognizer) {
-        if let handle = singleTapHandle {
-            handle()
-        }
-    }
-    
-    func configData(_ item: LQPhotoItem) {
+    override func configData(_ item: LQPhotoItem) {
         
         let manager = PHCachingImageManager.default()
         
@@ -110,7 +121,7 @@ class LQPhotoPreviewCell: UICollectionViewCell {
                 return
             }
             
-            self.zoomView.image = img
+            self.imageView.image = img
         }
         
         imageWidth = CGFloat(item.asset.pixelWidth)
@@ -126,7 +137,7 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         maxScale = imageScale + 1
     }
     
-    func reset() {
+    override func reset() {
         
         scroll.zoomScale = 1.0
         scroll.contentOffset = .zero
@@ -135,10 +146,26 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         scroll.minimumZoomScale = minScale
     }
     
+    @objc override func doupleTapGesture(_ gesture: UITapGestureRecognizer) {
+
+        if scroll.zoomScale != 1 {
+            scroll.setZoomScale(1.0, animated: true)
+        } else {
+            scroll.setZoomScale(imageScale, animated: true)
+
+        }
+    }
+    
+    @objc override func singleTapGesture( _ gesture: UITapGestureRecognizer) {
+        if let handle = singleTapHandle {
+            handle()
+        }
+    }
+    
     func zoomViewToCenter() {
         
         let boundSize = self.bounds.size
-        var frameToCenter = self.zoomView.frame
+        var frameToCenter = self.imageView.frame
         
         if frameToCenter.width < boundSize.width {
             frameToCenter.origin.x = (boundSize.width - frameToCenter.width)/2.0
@@ -152,7 +179,7 @@ class LQPhotoPreviewCell: UICollectionViewCell {
             frameToCenter.origin.y = 0
         }
         
-        self.zoomView.frame = frameToCenter
+        self.imageView.frame = frameToCenter
     }
     
     func layoutZoomViewFrame() {
@@ -194,20 +221,150 @@ class LQPhotoPreviewCell: UICollectionViewCell {
         //
         zoomFrame.size = CGSize(width: zoomViewWidth, height: zoomViewHeight)
         zoomFrame.origin = CGPoint(x: zoomX, y: zoomY)
-        zoomView.frame = zoomFrame
+        imageView.frame = zoomFrame
         
         self.scroll.setZoomScale(1.0, animated: false)
 //        maxScale = 3.0
     }
 }
 
-extension LQPhotoPreviewCell: UIScrollViewDelegate {
+extension LQPhotoImagePreviewCell: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return zoomView
+        return imageView
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         
         self.zoomViewToCenter()
+    }
+}
+
+//MARK: - 视频预览 LQPhotoVideoPreviewCell
+class LQPhotoVideoPreviewCell: LQPhotoPreviewCell {
+    
+    static let reuseIdentifier: String = "LQPhotoVideoPreviewCellReuseID"
+    
+    lazy var playButton: UIButton = {
+        let button = UIButton(type: .custom)
+        
+        button.setImage(UIImage(named: LQPhotoIcon_video_play), for: .normal)
+        button.setImage(UIImage(named: LQPhotoIcon_video_pause), for: .selected)
+        button.addTarget(self, action: #selector(playAction), for: .touchUpInside)
+        return button
+    }()
+    
+    lazy var player: AVPlayer = {
+        
+        let player = AVPlayer()
+        
+        return player
+    }()
+    
+    lazy var playerLayer: AVPlayerLayer = {
+        let playerl = AVPlayerLayer(player: self.player)
+        
+        
+        return playerl
+    }()
+    
+    var reqID: Int32 = -1
+    var currentPlayItem: AVPlayerItem?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.addSubview(imageView)
+        self.layer.addSublayer(self.playerLayer)
+        self.addSubview(self.playButton)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func configData(_ item: LQPhotoItem) {
+        
+        photo = item
+        let manager = PHCachingImageManager.default()
+        
+        if self.reqID > 0 {
+            let resID = PHImageRequestID(self.reqID)
+            
+            manager.cancelImageRequest(resID)
+        }
+        
+        let size = self.bounds.size
+        
+        self.reqID = manager.requestImage(for: item.asset, targetSize: CGSize.init(width: size.width*LQAlbumWindowScale, height: size.height*LQAlbumWindowScale), contentMode: .aspectFill, options: nil) { (image, info) in
+            guard let img = image else {
+                return
+            }
+            
+            self.imageView.image = img
+        }
+        
+        prepareToPlayVideo()
+    }
+    
+    override func reset() {
+        if playButton.isSelected {
+            playButton.isSelected = false
+            player.pause()
+        }
+    }
+    
+    @objc func playAction() {
+        playButton.isSelected = !playButton.isSelected
+        
+        if (playButton.isSelected) {
+            player.play()
+        } else {
+            player.pause()
+        }
+        
+        imageView.isHidden = true
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.playerLayer.frame = self.bounds
+        self.imageView.frame = self.bounds
+        self.playButton.bounds = CGRect(x: 0, y: 0, width: 50, height: 50)
+        self.playButton.center = CGPoint(x: self.bounds.size.width / 2.0, y: self.center.y)
+    }
+    
+    
+    func prepareToPlayVideo() {
+        
+        if let asset = photo?.asset {
+            let manager = PHCachingImageManager.default()
+            manager.requestPlayerItem(forVideo: asset, options: nil) { [weak self] playItem, info in
+                
+                self?.currentPlayItem = playItem
+                if let p = playItem {
+                    
+                    self?.addObserverWithPlayerItem(p)
+                    self?.player.replaceCurrentItem(with: p)
+                }
+            }
+        }
+    }
+    
+    func addObserverWithPlayerItem(_ item: AVPlayerItem?) {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(playEnd), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        
+    }
+    
+    @objc func playEnd() {
+        
+        prepareToPlayVideo()
+        playButton.isSelected = false
     }
 }

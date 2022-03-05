@@ -13,7 +13,7 @@ public enum LQPhotoCollectionStyle {
     case regular, photos, videos
 }
 
-private let reuseIdentifier = "LQPhotoCollectionViewControllerReuseIdentifier"
+//private let reuseIdentifier = "LQPhotoCollectionViewControllerReuseIdentifier"
 public typealias LQPhotoSelectedHandler = (_ items: [LQPhotoItem]) -> Void
 
 extension LQPhotoViewController {
@@ -31,7 +31,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
     var albumItem: LQAlbumItem?
     var columnNumber: Int = 4
     var delegate: LQPhotoViewControllerDelegate?
-    
     
     private var photoAlbum: LQAlbumItem?// 相机胶卷
     private var photoSavedAlbum: LQAlbumItem?// 保存拍摄照片的相册
@@ -72,21 +71,30 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         
         var colFrame = collectionView?.frame
         colFrame?.size.height -= 49
-        collectionView?.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height - 49)
+        collectionView?.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
         
-        bottomBar.frame = CGRect(x: 0, y: self.view.frame.height - 49, width: self.view.frame.width, height: 49)
+        let height =  (49 + self.view.safeAreaInsets.bottom)
+        bottomBar.frame = CGRect(x: 0, y: self.view.frame.height - height, width: self.view.frame.width, height:height)
+        
+        collectionView.contentInset = UIEdgeInsets(top: view.safeAreaInsets.top, left: 0, bottom: height, right: 0)
     }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
         
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
+        
         self.navigationController?.navigationBar.barStyle = .black
         self.navigationController?.navigationBar.isTranslucent = true
-        self.collectionView!.register(LQPhotoCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView?.register(LQPhotoCameraCell.self, forCellWithReuseIdentifier: "LQPhotoCameraCellID")
-        
+        self.collectionView!.register(LQPhotoCell.self, forCellWithReuseIdentifier: LQPhotoCell.reuseIdentifier)
+        self.collectionView?.register(LQPhotoCameraCell.self, forCellWithReuseIdentifier: LQPhotoCameraCell.reuseIdentifier)
         self.collectionView?.backgroundColor = UIColor.white
         self.collectionView?.bounces = true
+        
         self.title = "相册"
         
         if self.albumItem == nil {
@@ -102,7 +110,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 }
             }
         } else {
-            //            self.title = self.albumItem?.name
             self.activity.startAnimating()
             DispatchQueue(label: "LQPhotoCollectionViewControllerQueue").async {
                 self.loadData()
@@ -166,8 +173,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             title = "视频"
         } else {
             
-            
-            
             if self.albumItem == nil {
                 
                 var allPhoto: LQAlbumItem? = nil
@@ -175,7 +180,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 for am in albums {
                     if am.name == "相机胶卷" || am.name == "最近的" {
                         self.albumItem = am
-//                        break
                     } else if am.name == "所有照片" {
                         allPhoto = am
                     }
@@ -191,8 +195,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 let results = LQAlbumManager.shared.fetchAssetsFrom(item)
                 dataSource += results
             }
-            
-            
         }
         
         DispatchQueue.main.async {
@@ -235,6 +237,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             }
         }
     }
+    
     convenience init() {
         
         let space: CGFloat = 4
@@ -244,6 +247,7 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         if LQAlbum_iPad {
             col = 6
         }
+        
         layout.itemSize = CGSize(width: (UIScreen.main.bounds.width - space * CGFloat(col + 1))/CGFloat(col), height: (UIScreen.main.bounds.width - space * CGFloat(col + 1))/CGFloat(col))
         layout.minimumLineSpacing = space
         layout.minimumInteritemSpacing = space
@@ -317,12 +321,12 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
     override public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.row == dataSource.count {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LQPhotoCameraCellID", for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LQPhotoCameraCell.reuseIdentifier, for: indexPath)
             
             return cell
         }
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LQPhotoCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LQPhotoCell.reuseIdentifier, for: indexPath) as! LQPhotoCell
         
         let item = dataSource[indexPath.row]
         item.indexPath = indexPath
@@ -352,21 +356,21 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         let preview = LQPhotoPreviewController()
         preview.dataSource += self.dataSource
         preview.selectedItems += self.selectedItems
-        preview.beginIndexPath = IndexPath(item: 0, section: indexPath.row)
+        preview.beginIndexPath = IndexPath(item: indexPath.row, section: 0)
         preview.maxSelectedNumber = maxSelectedNumber
         
         self.navigationController?.pushViewController(preview, animated: true)
         
         preview.indexPathChangedHandle {[weak self] (indePath) in
             
-            let index = IndexPath(item: indexPath.section, section: 0)
+            let index = IndexPath(item: indexPath.row, section: 0)
             
             self?.collectionView?.scrollToItem(at: index, at: .centeredVertically, animated: false)
         }
         
         preview.selectedIndexPath {[weak self] (indexPath, isSelected, isOriginal) in
             
-            let index = IndexPath(item: indexPath.section, section: 0)
+            let index = IndexPath(item: indexPath.row, section: 0)
             self?.bottomBar.originButton.isSelected = isOriginal
             self?.selectedItem(isSelected, indexPath: index)
         }
@@ -536,7 +540,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         
         print("save success")
     }
-
 }
 
 extension LQPhotoViewController {
@@ -595,7 +598,6 @@ extension LQPhotoViewController {
                                        targetSize: size,
                                        contentMode: .aspectFill,
                                        options: nil)
-        
         // 存储最后的预见区
         previousPreheatRect = preheatRect
     }
@@ -625,6 +627,7 @@ extension LQPhotoViewController {
             return ([new], [old])
         }
     }
+    
     // 获取区域内所有IndexPath
     fileprivate func indexPathsForElements(in rect: CGRect) -> [IndexPath] {
         let allLayoutAttributes = self.collectionViewLayout.layoutAttributesForElements(in: rect)!
@@ -665,11 +668,10 @@ extension LQPhotoViewController {
             if isOriginal == false {
                 
             } else {
-                let index = IndexPath(item: indexPath.section, section: 0)
+                let index = IndexPath(item: indexPath.row, section: 0)
                 
                 self?.selectedItem(isSelected, indexPath: index)
             }
-            
         }
     }
     
@@ -702,66 +704,39 @@ extension LQPhotoViewController {
         }
     }
 }
+
 extension LQPhotoViewController: PHPhotoLibraryChangeObserver {
     
     public func photoLibraryDidChange(_ changeInstance: PHChange) {
         
         print("photoLibraryDidChange")
         
-        if let collection = self.photoSavedAlbum?.assetCollection, let changes = changeInstance.changeDetails(for: collection) {
-            
-            if let album = changes.objectAfterChanges {
-                
-                let item = LQAlbumItem(album)
-                let items = LQAlbumManager.shared.fetchAssetsFrom(item)
-                
-                if let last = items.last, let sLast = self.dataSource.last {
-                    
-                    if last.asset.localIdentifier != sLast.asset.localIdentifier {
-                        self.dataSource.append(items.last!)
-                        
-                        DispatchQueue.main.async {
-                            self.collectionView?.reloadData()
-                        }
-                    }
-                }
-            }
+        guard let collection = self.photoSavedAlbum?.assetCollection, let changes = changeInstance.changeDetails(for: collection) else {
+            return
         }
         
-    }
-}
-
-private var currentPath: IndexPath?
-extension LQPhotoViewController {
-    
-    func addPan() {
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction))
+        guard let album = changes.objectAfterChanges else {
+            return
+        }
         
-        collectionView?.superview?.addGestureRecognizer(pan)
-    }
-    
-    @objc func panGestureAction(_ pan: UIPanGestureRecognizer) {
+        let item = LQAlbumItem(album)
+        let items = LQAlbumManager.shared.fetchAssetsFrom(item)
         
-        let point = pan.location(in: collectionView)
         
-        if let path = collectionView?.indexPathForItem(at: point) {
+        guard let last = items.last, let sLast = self.dataSource.last else {
+            return
+        }
+        
+        if last.asset.localIdentifier != sLast.asset.localIdentifier {
+            self.dataSource.append(items.last!)
             
-            if let current = currentPath {
-                if current == path {
-                    return
-                }
+            DispatchQueue.main.async {
+                self.collectionView?.reloadData()
             }
-            
-            currentPath = path
-            //            self.selectedItem(<#T##isSelected: Bool##Bool#>, indexPath: <#T##IndexPath#>)
-            //            if let cell = collectionView?.cellForItem(at: path) as? LQPhotoCollectionViewCell {
-            //                self.selectPhoto(cell: cell)
-            //                //                scrollCollection(cell, point)
-            //            }
         }
     }
+    
 }
-
 
 protocol LQPhotoViewControllerDelegate {
     func photoViewController(_ viewController: LQPhotoViewController, didSelectedItems items:[LQPhotoItem])
@@ -770,4 +745,61 @@ protocol LQPhotoViewControllerDelegate {
 
 extension LQPhotoViewControllerDelegate {
     func photoViewControllerCanceled(_ viewController: LQPhotoViewController) {}
+}
+
+//MARK: - ********** 滑动多选 ************
+typealias LQCollectionPanAction = (_ cell: UICollectionViewCell, _ path: IndexPath) -> Void
+private var lq_currentPath: IndexPath?
+private var lq_action: LQCollectionPanAction?
+private var lq_isAutoScroll: Bool = true
+
+extension UICollectionView {
+    
+    func addPanGusture(_ isAutoScroll: Bool = true, _ action: LQCollectionPanAction? = nil) {
+        
+        lq_action = action
+        lq_isAutoScroll = isAutoScroll
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(panAction))
+        
+        self.superview?.addGestureRecognizer(pan)
+        self.decelerationRate = UIScrollView.DecelerationRate.fast
+    }
+    
+    @objc func panAction(_ pan: UIPanGestureRecognizer) {
+
+        let point = pan.location(in: self)
+        guard let path = self.indexPathForItem(at: point) else {
+            return
+        }
+        
+        guard let cell = self.cellForItem(at: path) else {
+            return
+        }
+        
+        if let pt = lq_currentPath {
+            if pt != path {
+                if let action = lq_action {
+                    action(cell, path)
+                }
+            }
+        }
+        
+        lq_currentPath = path
+        if lq_isAutoScroll {
+            
+            let y = self.contentOffset.y + self.frame.height
+            let h = cell.frame.height
+            let maxY = cell.frame.maxY
+            
+            if h + maxY > y {
+                
+                var lastPoint = point
+                lastPoint.y += h * 1.5
+                
+                if let lastPath = self.indexPathForItem(at: lastPoint) {
+                    self.scrollToItem(at: lastPath, at: .bottom, animated: true)
+                }
+            }
+        }
+    }
 }

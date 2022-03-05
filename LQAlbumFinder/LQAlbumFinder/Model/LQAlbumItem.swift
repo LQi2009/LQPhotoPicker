@@ -85,6 +85,11 @@ public class LQPhotoItem: NSObject {
     
     var asset: PHAsset!
     var indexPath: IndexPath?
+    var isVideo: Bool {
+        get {
+            return asset.mediaType == .video;
+        }
+    }
     
     init(_ asset: PHAsset) {
         

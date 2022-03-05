@@ -59,10 +59,8 @@ class LQAlbumCell: UITableViewCell {
             })
         }
         
-//        coverImage.image = UIImage(named: "")
         nameLabel.text = item.name
         numberLabel.text = "(\(item.count))"
-        print(item.name)
     }
     
     override func layoutSubviews() {

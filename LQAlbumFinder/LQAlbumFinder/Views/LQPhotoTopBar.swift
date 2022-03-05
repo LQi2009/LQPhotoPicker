@@ -29,6 +29,7 @@ class LQPhotoTopBar: UIView {
         
         let btn = UIButton(type: .custom)
         
+        btn.imageView?.contentMode = .scaleAspectFit
         btn.setBackgroundImage(UIImage.init(named: LQPhotoIcon_back), for: .normal)
         btn.addTarget(self, action: #selector(backButtonAction), for: .touchUpInside)
         self.addSubview(btn)
@@ -63,8 +64,8 @@ class LQPhotoTopBar: UIView {
         super.layoutSubviews()
         
         self.backgroundView.frame = self.bounds
-        self.backButton.frame = CGRect(x: 10, y: 12, width: 22, height: 40)
-        self.selectedButton.frame = CGRect(x: self.frame.width - 40, y: (64 - 30)/2.0, width: 30, height: 30)
+        self.backButton.frame = CGRect(x: 10, y: self.bounds.height - 40, width: 30, height: 30)
+        self.selectedButton.frame = CGRect(x: self.frame.width - 40, y: self.bounds.height - 40, width: 30, height: 30)
     }
     
     func backWithHandler(_ handler: @escaping LQPhotoTopBarActionHandler) {

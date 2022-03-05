@@ -33,6 +33,8 @@ class LQPhotoPicker {
             let photo = LQPhotoViewController()
             let navi = UINavigationController(rootViewController: photo)
             photo.style = .photos
+            navi.modalPresentationStyle = .fullScreen
+//            viewController.modalPresentationStyle = .fullScreen
             viewController.present(navi, animated: true, completion: nil)
         } else if type == .videos {
 //            let photo = LQPhotoViewController()

@@ -119,8 +119,9 @@ class LQPhotoBottomBar: UIView {
             self.previewButton.frame = CGRect(x: 10, y: 0, width: 50, height: 49)
         }
         
-        self.originButton.bounds = CGRect(x: 0, y: 0, width: 100, height: 49)
-        self.originButton.center = CGPoint(x: self.frame.width/2.0, y: self.frame.height/2.0)
+        self.originButton.frame = CGRect(x: self.center.x - 50, y: 0, width: 100, height: 49)
+//        self.originButton.bounds = CGRect(x: 0, y: 0, width: 100, height: 49)
+//        self.originButton.center = CGPoint(x: self.frame.width/2.0, y: self.frame.height/2.0)
         self.commitButton.frame = CGRect(x: self.frame.width - 100, y: 5, width: 80, height: 39)
     }
     /*
@@ -130,5 +131,11 @@ class LQPhotoBottomBar: UIView {
         // Drawing code
     }
     */
+    
+//    func isNotchScreen() -> Bool {
+//        if UIDevice.current.userInterfaceIdiom != UIUserInterfaceIdiomPhone {
+//            return NOSTR
+//        }
+//    }
 
 }

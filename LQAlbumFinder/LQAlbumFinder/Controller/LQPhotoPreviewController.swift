@@ -8,7 +8,6 @@
 
 import UIKit
 
-private let reuseIdentifier = "LQPhotoPreviewCellReuseIdentifier"
 typealias LQPhotoPreviewController_currentIndexPathHandler = (_ indexPath: IndexPath) -> Void
 typealias LQPhotoPreviewControllerSelectedIndexPathHandler = (_ indexPath: IndexPath, _ isSelected: Bool, _ isOriginal: Bool) -> Void
 
@@ -56,6 +55,8 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 0.00001
+        layout.minimumInteritemSpacing = 0.00001
         
         let collection = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         collection.delegate = self
@@ -63,7 +64,7 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
         collection.isPagingEnabled = true
         collection.showsHorizontalScrollIndicator = false
         collection.showsVerticalScrollIndicator = false
-        
+        collection.isPagingEnabled = true
         self.view.addSubview(collection)
         
         return collection
@@ -77,12 +78,24 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.isNavigationBarHidden = false
+        
+        if let handler = currentIndexPathHandle {
+            handler(currentIndexPath)
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.barStyle = .blackTranslucent
-        collectionView.register(LQPhotoPreviewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
+        
+        collectionView.register(LQPhotoImagePreviewCell.self, forCellWithReuseIdentifier: LQPhotoImagePreviewCell.reuseIdentifier)
+        collectionView.register(LQPhotoVideoPreviewCell.self, forCellWithReuseIdentifier: LQPhotoVideoPreviewCell.reuseIdentifier)
         
         self.layoutTopBar()
         self.setupBottomBar()
@@ -98,11 +111,19 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        topBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 64)
-        bottomBar.frame = CGRect(x: 0, y: self.view.frame.height - 49, width: self.view.frame.width, height: 49)
+        let theight =  (64 + self.view.safeAreaInsets.bottom)
+        topBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: theight)
+        
+        let height =  (49 + self.view.safeAreaInsets.bottom)
+        bottomBar.frame = CGRect(x: 0, y: self.view.frame.height - height, width: self.view.frame.width, height:height)
         collectionView.frame = self.view.bounds
-//        collectionView.updateConstraints()
         collectionView.reloadData()
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         if let index = beginIndexPath {
             
             collectionView.scrollToItem(at: index, at: .centeredHorizontally, animated: false)
@@ -123,106 +144,63 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
     
     // MARK: UICollectionViewDataSource
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return dataSource.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 1
     }
     
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dataSource.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! LQPhotoPreviewCell
         
-        let item = dataSource[indexPath.section]
+        let item = dataSource[indexPath.row]
+        var reuseid = ""
+        if item.isVideo {
+            reuseid = LQPhotoVideoPreviewCell.reuseIdentifier
+        } else {
+            reuseid = LQPhotoImagePreviewCell.reuseIdentifier
+        }
         
         if isPreview == false {
             item.indexPath = indexPath
         }
         
-        cell.configData(item)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseid, for: indexPath)
         
-        cell.singleTapAction {[weak self] in
-            self?.topBarHidden()
+        if let pcell = cell as? LQPhotoPreviewCell {
+            
+            pcell.configData(item)
+            
+            pcell.singleTapAction {[weak self] in
+                self?.topBarHidden()
+            }
         }
         
-        //        cell.isUserInteractionEnabled = false
         return cell
     }
     ///
-    
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
-        let cel = cell as! LQPhotoPreviewCell
-        cel.reset()
+        if let cel = cell as? LQPhotoPreviewCell {
+            cel.reset()
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("didSelectItemAt; \(indexPath.section)")
+        print("didSelectItemAt; \(indexPath.row)")
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
-        return 10
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        print("willDisplay\(indexPath.row)")
         
-        return 10
+        currentIndexPath = indexPath
+        setSelectedButtonState(indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         return collectionView.frame.size
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        
-        return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-    }
-    
-    var isBeginDrag: Bool = false
-    var effectiveSlidingDistance: CGFloat = 20.0
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-
-
-        isBeginDrag = true
-        beginDragOffset = scrollView.contentOffset
-    }
-   
-    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        
-        var currentIndex: Int = currentIndexPath.section
-        
-        if isBeginDrag {
-            
-            let currentOffset = scrollView.contentOffset.x - beginDragOffset.x
-            //向左滑动
-            if currentOffset - effectiveSlidingDistance > 0 {
-                // 如果滑动达到一定幅度, 则滚动到下一个
-                currentIndex += 1
-                if currentIndex >= dataSource.count {
-                    currentIndex = dataSource.count - 1
-                }
-            } else if currentOffset + effectiveSlidingDistance < 0  {
-                // 如果滑动达到一定幅度, 则滚动到前一个
-                currentIndex -= 1
-                if currentIndex < 0 {
-                    currentIndex = 0
-                }
-            }
-        }
-        
-        
-        let collection = scrollView as! UICollectionView
-        currentIndexPath = IndexPath(item: 0, section: currentIndex)
-        collection.scrollToItem(at: currentIndexPath, at: .centeredHorizontally, animated: true)
-        
-        setSelectedButtonState(currentIndexPath)
-        
-        if isBeginDrag {
-            isBeginDrag = false
-        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -320,7 +298,7 @@ extension LQPhotoPreviewController {
         if let handle = selectedIndexPathHandle {
             
             if isPreview {
-                let item = dataSource[currentIndexPath.section]
+                let item = dataSource[currentIndexPath.row]
                 handle(item.indexPath!, button.isSelected, bottomBar.originButton.isSelected)
                 
             } else {
@@ -331,7 +309,8 @@ extension LQPhotoPreviewController {
     
     private func selectedItem(_ isSelected: Bool, indexPath: IndexPath) {
         
-        let item = dataSource[indexPath.section]
+        print("selectedItem\(indexPath.row)")
+        let item = dataSource[indexPath.row]
         item.isSelected = isSelected
         item.isOriginal = bottomBar.originButton.isSelected
         
@@ -349,15 +328,15 @@ extension LQPhotoPreviewController {
             for i in 0..<selectedItems.count {
                 let im = selectedItems[i]
                 im.selectedNumber = i + 1
-                selectedItems[i] = im
+//                selectedItems[i] = im
                 
-                let index = dataSource.firstIndex(of: im)
-                dataSource[index!] = im
+                if let index = dataSource.firstIndex(of: im) {
+                    dataSource[index] = im
+                }
             }
-            
         }
         
-        dataSource[indexPath.section] = item
+        dataSource[indexPath.row] = item
         
         var selectedEnable = true
         if selectedItems.count == 9 {
@@ -379,7 +358,7 @@ extension LQPhotoPreviewController {
         
         if let index = indexPath {
             
-            let item = dataSource[index.section]
+            let item = dataSource[index.row]
             topBar.selectedButton.isSelected = item.isSelected
             if item.selectedNumber != -1 {
                 topBar.selectedButton.setTitle("\(item.selectedNumber)", for: .selected)
@@ -388,7 +367,6 @@ extension LQPhotoPreviewController {
             self.setBottomViewState()
             print(item.selectedNumber)
         }
-        
     }
 }
 
@@ -428,7 +406,7 @@ extension LQPhotoPreviewController {
             if let handle = selectedIndexPathHandle {
                 
                 if isPreview {
-                    let item = dataSource[currentIndexPath.section]
+                    let item = dataSource[currentIndexPath.row]
                     handle(item.indexPath!, topBar.selectedButton.isSelected, bottomBar.originButton.isSelected)
                     
                 } else {
@@ -444,7 +422,7 @@ extension LQPhotoPreviewController {
     
     @objc func sendButtonAction() {
         if selectedItems.count == 0 {
-            let item = dataSource[currentIndexPath.section]
+            let item = dataSource[currentIndexPath.row]
             selectedItems.append(item)
         }
         

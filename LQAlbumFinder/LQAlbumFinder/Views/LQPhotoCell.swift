@@ -62,6 +62,8 @@ class LQPhotoCell: UICollectionViewCell {
         return view
     }()
     
+    static let reuseIdentifier: String = "LQPhotoCellReuseID"
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -83,9 +85,7 @@ class LQPhotoCell: UICollectionViewCell {
     func configData(_ item: LQPhotoItem) {
         
         let manager = PHCachingImageManager.default()
-        
-        //        let options = PHImageRequestOptions()
-        
+                
         if self.tag != 0 {
             let resID = PHImageRequestID(self.tag)
             

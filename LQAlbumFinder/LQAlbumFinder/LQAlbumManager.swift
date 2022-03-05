@@ -53,6 +53,11 @@ class LQAlbumManager: NSObject {
             DispatchQueue.main.async {
                 handle(true)
             }
+        case .limited:
+            print("limited")
+            break
+        @unknown default: break
+            
         }
     }
     

@@ -20,6 +20,8 @@ class LQPhotoCameraCell: UICollectionViewCell {
         return imageView
     }()
     
+    static let reuseIdentifier: String = "LQPhotoCameraCellReuseID"
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         

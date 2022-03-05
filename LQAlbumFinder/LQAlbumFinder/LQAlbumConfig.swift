@@ -31,4 +31,5 @@ let LQPhotoIcon_commitButtonBg = LQPhotoIcon_bundle + "GreenBtnHighlight"
 
 let LQPhotoIcon_camera = LQPhotoIcon_bundle + "photo_camera"
 
-
+let LQPhotoIcon_video_play = LQPhotoIcon_bundle + "video_play"
+let LQPhotoIcon_video_pause = LQPhotoIcon_bundle + "video_pause"
