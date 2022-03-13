@@ -13,7 +13,6 @@ public enum LQPhotoCollectionStyle {
     case regular, photos, videos
 }
 
-//private let reuseIdentifier = "LQPhotoCollectionViewControllerReuseIdentifier"
 public typealias LQPhotoSelectedHandler = (_ items: [LQPhotoItem]) -> Void
 
 extension LQPhotoViewController {
@@ -157,8 +156,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             self.automaticallyAdjustsScrollViewInsets = false
         }
         
-//        self.navigationController?.navigationBar.barStyle = .black
-//        self.navigationController?.navigationBar.isTranslucent = true
         self.collectionView!.register(LQPhotoCell.self, forCellWithReuseIdentifier: LQPhotoCell.reuseIdentifier)
         self.collectionView?.register(LQPhotoCameraCell.self, forCellWithReuseIdentifier: LQPhotoCameraCell.reuseIdentifier)
         self.collectionView?.backgroundColor = UIColor.white
@@ -399,28 +396,32 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         
         self.navigationController?.pushViewController(preview, animated: true)
         
-        preview.indexPathChangedHandle {[weak self] (indePath) in
-            
-            let index = IndexPath(item: indexPath.row, section: 0)
-            
-            self?.collectionView?.scrollToItem(at: index, at: .centeredVertically, animated: false)
-        }
-        
-        preview.selectedIndexPath {[weak self] (indexPath, isSelected, isOriginal) in
-            
-            let index = IndexPath(item: indexPath.row, section: 0)
-            self?.bottomBar.originButton.isSelected = isOriginal
-            self?.selectedItem(isSelected, indexPath: index)
-        }
-        
         preview.didSelectedItems {[weak self] (items) in
             if let handle = self?.selectedHandle {
                 handle(items)
             }
         }
+        
+        //=========
+        preview.selectedIndexPath {[weak self] indexPath, isSelected in
+            
+            let index = IndexPath(item: indexPath.row, section: 0)
+            self?.selectedItem(isSelected, indexPath: index)
+        }
+        
+        preview.indexPathChanged {[weak self] indexPath in
+            
+            let index = IndexPath(item: indexPath.row, section: 0)
+
+            self?.collectionView?.scrollToItem(at: index, at: .centeredVertically, animated: false)
+        }
+        
+        preview.originalStateChanged {[weak self] isOriginal in
+            self?.bottomBar.originButton.isSelected = isOriginal
+        }
     }
     
-    fileprivate func selectedItem(_ isSelected: Bool, indexPath: IndexPath) {
+    fileprivate func  selectedItem(_ isSelected: Bool, indexPath: IndexPath) {
         
         if maxSelectedNumber > 0 && selectedItems.count == maxSelectedNumber && isSelected {
             
@@ -437,8 +438,11 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
         item.isOriginal = self.bottomBar.originButton.isSelected
         if isSelected {
             
-            item.selectedNumber = selectedItems.count + 1
-            selectedItems.append(item)
+            if !selectedItems.contains(item) {
+                item.selectedNumber = selectedItems.count + 1
+                selectedItems.append(item)
+            }
+            
         } else {
             
             let index = selectedItems.firstIndex(of: item)
@@ -450,14 +454,9 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             for i in 0..<selectedItems.count {
                 let im = selectedItems[i]
                 im.selectedNumber = i + 1
-                selectedItems[i] = im
-                
-                let index = dataSource.firstIndex(of: im)
-                dataSource[index!] = im
             }
         }
         
-        dataSource[indexPath.row] = item
         var selectedEnable = true
         
         if selectedItems.count == maxSelectedNumber && maxSelectedNumber > 0 {
@@ -468,7 +467,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
             let im = dataSource[i]
             if im.isSelected == false {
                 im.isSelectedEnable = selectedEnable
-                dataSource[i] = im
             }
         }
         
@@ -533,8 +531,6 @@ public class LQPhotoViewController: UICollectionViewController, UIImagePickerCon
                 picker.cameraCaptureMode = .photo
                 picker.modalPresentationStyle = .fullScreen
                 
-                //                picker.showsCameraControls = false
-                //                picker.cameraViewTransform = CGAffineTransform.init(scaleX: 1.5, y: 2.0)
                 present(picker,animated: true,completion: nil)
             } else {
                 print("不支持相机")
@@ -700,16 +696,16 @@ extension LQPhotoViewController {
         preview.isPreview = true
         
         self.navigationController?.pushViewController(preview, animated: true)
-        
-        preview.selectedIndexPath {[weak self] (indexPath, isSelected, isOriginal) in
+        preview.originalStateChanged {[weak self] isOriginal in
+            
             self?.bottomBar.originButton.isSelected = isOriginal
-            if isOriginal == false {
-                
-            } else {
-                let index = IndexPath(item: indexPath.row, section: 0)
-                
-                self?.selectedItem(isSelected, indexPath: index)
-            }
+        }
+        
+        preview.selectedIndexPath {[weak self] indexPath, isSelected in
+            
+            let index = IndexPath(item: indexPath.row, section: 0)
+            
+            self?.selectedItem(isSelected, indexPath: index)
         }
     }
     
@@ -718,6 +714,10 @@ extension LQPhotoViewController {
         
         for item in selectedItems {
             item.isOriginal =  button.isSelected
+        }
+        
+        for item in dataSource {
+            print("selected: \(item.isSelected) origin: \(item.isOriginal) number: \(item.selectedNumber)")
         }
     }
     
@@ -746,9 +746,7 @@ extension LQPhotoViewController {
 extension LQPhotoViewController: PHPhotoLibraryChangeObserver {
     
     public func photoLibraryDidChange(_ changeInstance: PHChange) {
-        
-        print("photoLibraryDidChange")
-        
+                
         guard let collection = self.photoSavedAlbum?.assetCollection, let changes = changeInstance.changeDetails(for: collection) else {
             return
         }

@@ -36,6 +36,12 @@ class LQPhotoPicker {
             navi.modalPresentationStyle = .fullScreen
 //            viewController.modalPresentationStyle = .fullScreen
             viewController.present(navi, animated: true, completion: nil)
+            photo.didSelectedItems { items in
+                for item in items {
+                    
+                    print("selected: \(item.isSelected) origin: \(item.isOriginal) number: \(item.selectedNumber)")
+                }
+            }
         } else if type == .videos {
 //            let photo = LQPhotoViewController()
 //            let navi = UINavigationController(rootViewController: photo)
@@ -63,6 +69,11 @@ class LQPhotoPicker {
             photo.didSelectedItems({(items) in
 //                let sf = self
                 self.didSelected(items)
+                for item in items {
+                    
+                    print("selected: \(item.isSelected) origin: \(item.isOriginal) number: \(item.selectedNumber)")
+                }
+
             })
         }
     }

@@ -89,6 +89,12 @@ class LQAlbumViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
+        
         titleLabel.text = "相册"
         
 //        self.tableView.tableHeaderView = self.topView
@@ -126,7 +132,7 @@ class LQAlbumViewController: UIViewController, UITableViewDelegate, UITableViewD
         cancelButton.frame = CGRect(x: self.view.frame.width - 60.0, y: theight - 40, width: 50.0, height: 30.0)
         titleLabel.frame = CGRect(x: 70, y: theight - 40.0, width: self.view.frame.width - 140.0, height: 30.0)
         
-        tableView.contentInset = UIEdgeInsets(top: self.view.safeAreaInsets.top, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: theight, left: 0, bottom: view.safeAreaInsets.bottom, right: 0)
     }
     
     override func didReceiveMemoryWarning() {

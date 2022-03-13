@@ -8,8 +8,10 @@
 
 import UIKit
 
-typealias LQPhotoPreviewController_currentIndexPathHandler = (_ indexPath: IndexPath) -> Void
-typealias LQPhotoPreviewControllerSelectedIndexPathHandler = (_ indexPath: IndexPath, _ isSelected: Bool, _ isOriginal: Bool) -> Void
+typealias LQPhotoCurrentIndexPathHandler = (_ indexPath: IndexPath) -> Void
+typealias LQPhotoOriginalStateChangedHandler = (_ isOriginal: Bool) -> Void
+typealias LQPhotoSelectedIndexPathHandler = (_ indexPath: IndexPath, _ isSelected: Bool) -> Void
+
 
 class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
 
@@ -26,10 +28,12 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
     //MARK: - private perporty
     fileprivate var currentIndexPath: IndexPath! = IndexPath(item: 0, section: 0)
     private var beginDragOffset: CGPoint = .zero
-    private var currentIndexPathHandle: LQPhotoPreviewController_currentIndexPathHandler?
-    fileprivate var selectedIndexPathHandle: LQPhotoPreviewControllerSelectedIndexPathHandler?
-    var selectedHandler: LQPhotoSelectedHandler?
-
+    
+    private var selectedHandler: LQPhotoSelectedHandler?
+    private var currentIndexPathHandler: LQPhotoCurrentIndexPathHandler?
+    private var originalStateChangedHandler: LQPhotoOriginalStateChangedHandler?
+    private var selectedIndexPathHandler: LQPhotoSelectedIndexPathHandler?
+    
     lazy var topBar: LQPhotoTopBar = {
         
         let bar = LQPhotoTopBar()
@@ -79,7 +83,7 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
         super.viewWillDisappear(animated)
         self.navigationController?.isNavigationBarHidden = false
         
-        if let handler = currentIndexPathHandle {
+        if let handler = currentIndexPathHandler {
             handler(currentIndexPath)
         }
     }
@@ -118,7 +122,6 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
         bottomBar.frame = CGRect(x: 0, y: self.view.frame.height - height, width: self.view.frame.width, height:height)
         collectionView.frame = self.view.bounds
         collectionView.reloadData()
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -129,17 +132,21 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
             collectionView.scrollToItem(at: index, at: .centeredHorizontally, animated: false)
         }
     }
+    
+    func didSelectedItems(_ handler: @escaping LQPhotoSelectedHandler) {
+        selectedHandler = handler
+    }
+    
+    func indexPathChanged(_ handler: @escaping LQPhotoCurrentIndexPathHandler) {
+        currentIndexPathHandler = handler
+    }
+    
+    func selectedIndexPath(_ handler: @escaping LQPhotoSelectedIndexPathHandler) {
+        selectedIndexPathHandler = handler
+    }
 
-    func didSelectedItems(_ handle: @escaping LQPhotoSelectedHandler) {
-        selectedHandler = handle
-    }
-    
-    func indexPathChangedHandle(_ handle: @escaping LQPhotoPreviewController_currentIndexPathHandler) {
-        currentIndexPathHandle = handle
-    }
-    
-    func selectedIndexPath(_ handle: @escaping LQPhotoPreviewControllerSelectedIndexPathHandler) {
-        selectedIndexPathHandle = handle
+    func originalStateChanged(_ handler: @escaping LQPhotoOriginalStateChangedHandler) {
+        originalStateChangedHandler = handler
     }
     
     // MARK: UICollectionViewDataSource
@@ -187,12 +194,9 @@ class LQPhotoPreviewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("didSelectItemAt; \(indexPath.row)")
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        
-        print("willDisplay\(indexPath.row)")
         
         currentIndexPath = indexPath
         setSelectedButtonState(indexPath)
@@ -266,7 +270,7 @@ extension LQPhotoPreviewController {
         }
         
         self.topBar.selectedWithHandler {[weak self] (button) in
-            self?.selectedButtonAction(button)
+            self?.topButtonSelectedAction(button)
         }
         
         setSelectedButtonState(beginIndexPath)
@@ -277,7 +281,8 @@ extension LQPhotoPreviewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    @objc fileprivate func selectedButtonAction(_ button: UIButton) {
+    @objc fileprivate func topButtonSelectedAction(_ button: UIButton) {
+        
         if maxSelectedNumber > 0 &&  selectedItems.count == maxSelectedNumber && !button.isSelected {
             let alert = UIAlertController(title: "您最多只能选择\(maxSelectedNumber)张照片!", message: nil, preferredStyle: .alert)
             let ok = UIAlertAction(title: "我知道了", style: .default, handler: nil)
@@ -295,29 +300,29 @@ extension LQPhotoPreviewController {
         selectedItem(button.isSelected, indexPath: currentIndexPath)
         setSelectedButtonState(currentIndexPath)
         
-        if let handle = selectedIndexPathHandle {
+        if let handle = selectedIndexPathHandler {
             
             if isPreview {
                 let item = dataSource[currentIndexPath.row]
-                handle(item.indexPath!, button.isSelected, bottomBar.originButton.isSelected)
+                handle(item.indexPath!, button.isSelected)
                 
             } else {
-                handle(currentIndexPath, button.isSelected, bottomBar.originButton.isSelected)
+                handle(currentIndexPath, button.isSelected)
             }
         }
     }
     
     private func selectedItem(_ isSelected: Bool, indexPath: IndexPath) {
         
-        print("selectedItem\(indexPath.row)")
         let item = dataSource[indexPath.row]
         item.isSelected = isSelected
         item.isOriginal = bottomBar.originButton.isSelected
         
         if isSelected {
-            
-            item.selectedNumber = selectedItems.count + 1
-            selectedItems.append(item)
+            if !selectedItems.contains(item) {
+                item.selectedNumber = selectedItems.count + 1
+                selectedItems.append(item)
+            }
         } else {
             
             let index = selectedItems.firstIndex(of: item)
@@ -328,18 +333,11 @@ extension LQPhotoPreviewController {
             for i in 0..<selectedItems.count {
                 let im = selectedItems[i]
                 im.selectedNumber = i + 1
-//                selectedItems[i] = im
-                
-                if let index = dataSource.firstIndex(of: im) {
-                    dataSource[index] = im
-                }
             }
         }
-        
-        dataSource[indexPath.row] = item
-        
+                
         var selectedEnable = true
-        if selectedItems.count == 9 {
+        if selectedItems.count == maxSelectedNumber {
             selectedEnable = false
         }
         
@@ -347,7 +345,6 @@ extension LQPhotoPreviewController {
             let im = dataSource[i]
             if im.isSelected == false {
                 im.isSelectedEnable = selectedEnable
-                dataSource[i] = im
             }
         }
         
@@ -365,7 +362,6 @@ extension LQPhotoPreviewController {
             }
             
             self.setBottomViewState()
-            print(item.selectedNumber)
         }
     }
 }
@@ -399,24 +395,18 @@ extension LQPhotoPreviewController {
     func originButtonAction(_ button: UIButton) {
         button.isSelected = !button.isSelected
         
-        if button.isSelected && topBar.selectedButton.isSelected == false  {
-            selectedButtonAction(topBar.selectedButton)
-        } else {
-            
-            if let handle = selectedIndexPathHandle {
-                
-                if isPreview {
-                    let item = dataSource[currentIndexPath.row]
-                    handle(item.indexPath!, topBar.selectedButton.isSelected, bottomBar.originButton.isSelected)
-                    
-                } else {
-                    handle(currentIndexPath, topBar.selectedButton.isSelected, bottomBar.originButton.isSelected)
-                }
-            }
-        }
-        
         for item in selectedItems {
             item.isOriginal = button.isSelected
+        }
+        
+        if let handler = originalStateChangedHandler {
+            
+            handler(button.isSelected)
+        }
+        
+        if button.isSelected  && !topBar.selectedButton.isSelected {
+            
+            topButtonSelectedAction(topBar.selectedButton)
         }
     }
     
